@@ -1,15 +1,14 @@
 package com.example.simpleboard.controller;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Service
+@Controller
 public class SimpleBoardController 
 {
-    
     @GetMapping("/")
     public String index()
     {
@@ -17,10 +16,10 @@ public class SimpleBoardController
         return "index";
     }
 
-    @GetMapping("/view/login")
-    public String login()
+    @GetMapping("/view/dashboard")
+    public String dashboard()
     {
-        log.info("login called");
-        return "";
+        log.info("dashboard called");
+        return "index";
     }
 }
