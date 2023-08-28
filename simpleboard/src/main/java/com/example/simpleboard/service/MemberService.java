@@ -55,7 +55,7 @@ public class MemberService {
     {
         if(planePw == null || planePw.equals(""))
             return false;
-        return false;
+        return true;
     }
 
     public boolean signUp(String email, String planePw)
@@ -68,7 +68,7 @@ public class MemberService {
         if(validCheckForPlanePw(planePw) == false)
             return false;
 
-        var isExist = memberRepository.existsById(email);
+        var isExist = memberRepository.existsByEmail(email);
         if(isExist)
             return false;
         MemberEntity newMember = new MemberEntity(null, email, planePw, "NONE", false);

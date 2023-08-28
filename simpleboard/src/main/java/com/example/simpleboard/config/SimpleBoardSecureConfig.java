@@ -44,7 +44,7 @@ public class SimpleBoardSecureConfig {
                     .loginProcessingUrl("/member/sign-in-process")
                     .usernameParameter("email")
                     .passwordParameter("password")
-                    .defaultSuccessUrl("/", true)
+                    .defaultSuccessUrl("/member/sign-in-success", true)
                     .permitAll()
                 ;
             })

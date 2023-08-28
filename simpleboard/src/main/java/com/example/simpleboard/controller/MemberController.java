@@ -11,7 +11,6 @@ import com.example.simpleboard.dto.JoinFormDto;
 import com.example.simpleboard.service.MemberService;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Slf4j
@@ -30,15 +29,23 @@ public class MemberController
     }
     
     @PostMapping(value="/sign-up-process")
-    public ResponseEntity<String> postMethodName(@RequestBody JoinFormDto dto) 
+    public String memberSignUpProcess(JoinFormDto dto) 
     {
         log.info(
             "sign-up-process called, email[%s] plane pw[%s]"
                 .formatted(dto.getEmail(), dto.getPassword())
         );
 
-        memberService.signUp(dto.getEmail(), dto.getPassword());
-        return ResponseEntity.ok().body("sign up success");
+        boolean signUpSuccess = memberService.signUp(dto.getEmail(), dto.getPassword());
+        if(signUpSuccess == false)
+        {
+            //page 를 다르게
+        }
+        else
+        {
+            //page 를 다르게
+        }
+        return "redirect:/";
     }
 
     @GetMapping("/sign-in")
@@ -48,4 +55,10 @@ public class MemberController
         return "sign_in";
     }
 
+    @GetMapping("/sign-in-success")
+    public String memberSignInSuccess()
+    {
+        log.info("memberSignIn Success called");
+        return "sign_in_success";
+    }
 }

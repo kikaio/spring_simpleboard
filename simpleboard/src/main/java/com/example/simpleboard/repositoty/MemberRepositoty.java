@@ -10,5 +10,7 @@ import com.example.simpleboard.entity.MemberEntity;
 @Repository
 public interface MemberRepositoty extends CrudRepository<MemberEntity, String>
 {
-    public Optional<MemberEntity> findByEmail(String email);    
+    public Optional<MemberEntity> findByEmail(String email);
+
+    public boolean existsByEmail(String email);
 }

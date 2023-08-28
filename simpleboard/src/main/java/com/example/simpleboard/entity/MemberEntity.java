@@ -1,5 +1,7 @@
 package com.example.simpleboard.entity;
 
+import java.math.BigInteger;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,7 +26,7 @@ import lombok.NoArgsConstructor;
 public class MemberEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private BigInteger id;
 
     private String email;
     
