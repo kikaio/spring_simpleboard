@@ -1,9 +1,11 @@
 package com.example.simpleboard.service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.simpleboard.entity.MemberEntity;
@@ -19,6 +21,9 @@ public class MemberService {
 
     @Autowired
     private MemberRepositoty memberRepository;
+
+    @Autowired
+    private PasswordEncoder pwEncoder;
 
     @PostConstruct
     public void init()
@@ -72,9 +77,13 @@ public class MemberService {
         if(isExist)
             return false;
         MemberEntity newMember = new MemberEntity(null, email, planePw, "NONE", false);
-        newMember.doEncrypt();
+        newMember.doEncrypt(pwEncoder);
         memberRepository.save(newMember);
         return true;
     }
 
+    public Iterable<MemberEntity> getAllMembers()
+    {
+        return memberRepository.findAll();
+    }
 }

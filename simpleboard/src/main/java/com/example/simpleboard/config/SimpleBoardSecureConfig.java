@@ -6,7 +6,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import jakarta.servlet.DispatcherType;
@@ -16,11 +15,11 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableMethodSecurity
 public class SimpleBoardSecureConfig {
 
-    // @Bean
-    // public PasswordEncoder passwordEncoder()
-    // {
-    //     return new StandardPasswordEncoder();
-    // }
+    @Bean
+    public PasswordEncoder passwordEncoder()
+    {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
@@ -33,6 +32,7 @@ public class SimpleBoardSecureConfig {
                     .requestMatchers(
                         "/"
                         , "/member/sign-up", "/member/sign-up-process", "/member/sign-in"
+                        , "/member/list"
                         , "/static", "/status", "/images/**"
                     ).permitAll()
                     .anyRequest().authenticated()

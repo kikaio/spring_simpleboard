@@ -1,13 +1,16 @@
 package com.example.simpleboard.controller;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.example.simpleboard.dto.JoinFormDto;
+import com.example.simpleboard.dto.MemberFormDto;
 import com.example.simpleboard.service.MemberService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +32,7 @@ public class MemberController
     }
     
     @PostMapping(value="/sign-up-process")
-    public String memberSignUpProcess(JoinFormDto dto) 
+    public String memberSignUpProcess(@ModelAttribute MemberFormDto dto) 
     {
         log.info(
             "sign-up-process called, email[%s] plane pw[%s]"
@@ -60,5 +63,19 @@ public class MemberController
     {
         log.info("memberSignIn Success called");
         return "sign_in_success";
+    }
+
+    @GetMapping("list")
+    public String getAllMembers(Model model)
+    {
+        var members = memberService.getAllMembers();
+        var membersDto = new ArrayList<MemberFormDto>();
+        for(var mem : members)
+        {
+            var newMemDto = new MemberFormDto(mem.getEmail(), mem.getPassword());
+            membersDto.add(newMemDto);
+        }
+        model.addAttribute("members", membersDto);
+        return "/member/members";
     }
 }
