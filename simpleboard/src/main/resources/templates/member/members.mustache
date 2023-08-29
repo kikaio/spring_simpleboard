@@ -14,15 +14,36 @@
         <div id="content">
             <table>
                 <tr>
-                    <th>email</th><th>password</th>
+                    <th>email</th>
+                    <th>role</th>
+                    <th>is locked</th>
+                    <th>change lock status</th>
                 </tr>
                 {{#members}}
                     <tr>
                         <td>{{email}}</td>
-                        <td>{{password}}</td>
+                        <td>{{role}}</td>
+                        {{#isLocked}}
+                        <td>TRUE</td>
+                        <td>
+                            <button type="button" onclick="location.href='/member/lock?email={{email}}&dolock=false'">do unlock</button>
+                        </td>
+                        {{/isLocked}}
+                        {{^isLocked}}
+                        <td>FALSE</td>
+                        <td>
+                            <button type="button" onclick="location.href='/member/lock?email={{email}}&dolock=true'">do lock</button>
+                        </td>
+                        {{/isLocked}}
                     </tr>
                 {{/members}}
             </table>
+            {{#changed_member}}
+                <p>member {{email}} was changed</p>
+                {{#changed_lock_status}}
+                    <p>member lock status cheanged to {{changed_member.isLocked}}</p>
+                {{/changed_lock_status}}
+            {{/changed_member}}
         </div>
         <script src="/assets/js/default.js"></script>
     </body>

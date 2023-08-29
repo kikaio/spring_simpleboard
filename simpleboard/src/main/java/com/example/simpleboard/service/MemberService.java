@@ -30,7 +30,7 @@ public class MemberService {
     {
         String initEmail = "admin@admin.com";
         String initPw = "1234";
-        boolean success = signUp(initEmail, initPw);
+        boolean success = signUp(initEmail, initPw, "ADMIN");
         log.info(
             "try join member email[%s] pw[%s] %s"
                 .formatted(initEmail, initPw, success?"SUCCESS" : "FAILED")
@@ -63,7 +63,7 @@ public class MemberService {
         return true;
     }
 
-    public boolean signUp(String email, String planePw)
+    public boolean signUp(String email, String planePw, String role)
     {
         //valid check for email
         if(validCheckForEmail(email) == false)
@@ -76,7 +76,14 @@ public class MemberService {
         var isExist = memberRepository.existsByEmail(email);
         if(isExist)
             return false;
-        MemberEntity newMember = new MemberEntity(null, email, planePw, "NONE", false);
+        MemberEntity newMember = MemberEntity.builder()
+            .id(null)
+            .email(email)
+            .password(planePw)
+            .role(role)
+            .isLocked(false)
+            .build();
+            
         newMember.doEncrypt(pwEncoder);
         memberRepository.save(newMember);
         return true;
@@ -85,5 +92,10 @@ public class MemberService {
     public Iterable<MemberEntity> getAllMembers()
     {
         return memberRepository.findAll();
+    }
+
+    public void saveMember(MemberEntity member)
+    {
+        memberRepository.save(member);
     }
 }

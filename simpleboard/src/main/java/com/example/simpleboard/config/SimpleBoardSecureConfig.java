@@ -7,9 +7,15 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 import jakarta.servlet.DispatcherType;
 import static org.springframework.security.config.Customizer.withDefaults;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableMethodSecurity
@@ -24,16 +30,19 @@ public class SimpleBoardSecureConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
     {
+        String[] permitAlls = {
+            "/"
+            , "/member/sign-up", "/member/sign-up-process", "/member/sign-in"
+            , "/member/list"
+            , "/static", "/status", "/images/**"
+        };
         http.cors(cors->cors.disable())
             .csrf(csrf->csrf.disable())
             .authorizeHttpRequests(req->
             {
                 req.dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
                     .requestMatchers(
-                        "/"
-                        , "/member/sign-up", "/member/sign-up-process", "/member/sign-in"
-                        , "/member/list"
-                        , "/static", "/status", "/images/**"
+                        permitAlls
                     ).permitAll()
                     .anyRequest().authenticated()
                     ;
@@ -48,7 +57,18 @@ public class SimpleBoardSecureConfig {
                     .permitAll()
                 ;
             })
-            .logout(withDefaults())
+            .logout(req->{
+                req.logoutUrl("/member/sign-out")
+                    .addLogoutHandler((request, response, authentication) -> {
+                        var session = request.getSession();
+                        if(session != null)
+                            session.invalidate();
+                    })
+                    .logoutSuccessHandler((request, response, authentication) -> {
+                        response.sendRedirect("/member/sign-in");
+                    })
+                ;
+            })
             ;
         ;
         return http.build();

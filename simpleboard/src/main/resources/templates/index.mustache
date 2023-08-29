@@ -17,9 +17,19 @@
             <div>
                 <button type="button" onclick="location.href='/member/sign-in'">go to sign in</button>
                 <button type="button" onclick="location.href='/member/sign-up'">go to sign up</button>
-                <button type="button" onclick="location.href='/member/sign-out'">go to sign out</button>
+                <button name="sign_out_btn" type="button" onclick="onSignOutClicked()">go to sign out</button>
                 <button type="button" onclick="location.href='/member/list'">check member list</button>
             </div>
         </div>
     </body>
+    <script>
+        function onSignOutClicked()
+        {
+            var form = document.createElement("form");
+            form.action = "/member/sign-out";
+            form.method = "POST";
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
 </html>
