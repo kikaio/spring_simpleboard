@@ -1,25 +1,25 @@
 package com.example.simpleboard.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.LogoutFilter;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 import jakarta.servlet.DispatcherType;
 import static org.springframework.security.config.Customizer.withDefaults;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Configuration
 @EnableMethodSecurity
 public class SimpleBoardSecureConfig {
+
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder()
@@ -45,6 +45,13 @@ public class SimpleBoardSecureConfig {
                         permitAlls
                     ).permitAll()
                     .anyRequest().authenticated()
+                    ;
+            })
+            .rememberMe(req->{
+                req.rememberMeCookieName("remember_cookie")
+                    .rememberMeParameter("remember")
+                    .tokenValiditySeconds(60 * 60 * 24 * 7 * 3) //3weeks
+                    .userDetailsService(userDetailsService)
                     ;
             })
             .formLogin(req->
