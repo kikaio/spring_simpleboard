@@ -5,18 +5,30 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.DispatcherType;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
+
 import static org.springframework.security.config.Customizer.withDefaults;
+
+import java.util.Optional;
+
+import org.apache.catalina.authenticator.SavedRequest;
 
 
 @Configuration
 @EnableMethodSecurity
+@Slf4j
 public class SimpleBoardSecureConfig {
 
     @Autowired
@@ -29,6 +41,23 @@ public class SimpleBoardSecureConfig {
     {
         return new BCryptPasswordEncoder();
     }
+
+    // @PostConstruct
+    // public void init()
+    // {
+    //     String initEmail = "admin@admin.com";
+    //     String initPw = "1234";
+    //     if(userDetailsService instanceof SimpleBoardUserDetailService)
+    //     {
+    //         var curService = (SimpleBoardUserDetailService)this.userDetailsService;
+            
+    //         boolean success = curService.signUp(initEmail, passwordEncoder().encode(initPw), "ADMIN");
+    //         log.info(
+    //             "try join member email[%s] pw[%s] %s"
+    //                 .formatted(initEmail, initPw, success?"SUCCESS" : "FAILED")
+    //         );
+    //     }
+    // }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
@@ -92,11 +121,12 @@ public class SimpleBoardSecureConfig {
                     .passwordParameter("password")
                     .defaultSuccessUrl(signInSuccessUrl, true)
                     .permitAll()
-                    .successHandler((request, response, authentication) -> {
+                    .successHandler((HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
                             //login success url 말고 직전에 있던 url 로 redirect 처리
                             HttpSessionRequestCache reqCache = new HttpSessionRequestCache();
                             var savedReq = reqCache.getRequest(request, response);
                             String redirecUrl = savedReq.getRedirectUrl();
+                            UserDetails user = (UserDetails)authentication.getPrincipal();
                             System.out.println("redirect url : %s".formatted(redirecUrl));
                             response.sendRedirect(redirecUrl);
                     })

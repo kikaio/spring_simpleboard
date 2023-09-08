@@ -36,4 +36,9 @@ public class SimpleBoardUserDetailService implements UserDetailsService
             .accountLocked(member.isLocked())
             .build();
     }
+
+    public boolean signUp(String id, String pw, String role)
+    {
+        return this.memberService.signUp(id, pw, role);
+    }
 }

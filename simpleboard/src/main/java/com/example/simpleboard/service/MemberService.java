@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.simpleboard.entity.MemberEntity;
@@ -22,20 +21,6 @@ public class MemberService {
     @Autowired
     private MemberRepositoty memberRepository;
 
-    @Autowired
-    private PasswordEncoder pwEncoder;
-
-    @PostConstruct
-    public void init()
-    {
-        String initEmail = "admin@admin.com";
-        String initPw = "1234";
-        boolean success = signUp(initEmail, initPw, "ADMIN");
-        log.info(
-            "try join member email[%s] pw[%s] %s"
-                .formatted(initEmail, initPw, success?"SUCCESS" : "FAILED")
-        );
-    }
 
     public Optional<MemberEntity> findMemberByEmail(String email)
     {
@@ -84,7 +69,6 @@ public class MemberService {
             .isLocked(false)
             .build();
             
-        newMember.doEncrypt(pwEncoder);
         memberRepository.save(newMember);
         return true;
     }

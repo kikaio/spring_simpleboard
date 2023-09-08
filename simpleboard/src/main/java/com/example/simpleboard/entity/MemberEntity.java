@@ -2,10 +2,7 @@ package com.example.simpleboard.entity;
 
 import java.math.BigInteger;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -42,12 +39,6 @@ public class MemberEntity {
     private String role;
     
     private boolean isLocked;
-
-    @Bean
-    public void doEncrypt(PasswordEncoder pwEncoder)
-    {
-        this.password = pwEncoder.encode(this.password);
-    }
 
     public void doLock()
     {
