@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,9 @@ public class MemberController
     @Autowired
     private MemberService memberService;
 
+    @Autowired
+    private PasswordEncoder pwEncoder;
+
     @GetMapping("/sign-up")
     public String memberSignUp()
     {
@@ -44,14 +48,16 @@ public class MemberController
                 .formatted(dto.getEmail(), dto.getPassword())
         );
 
-        boolean signUpSuccess = memberService.signUp(dto.getEmail(), dto.getPassword(), "NONE");
+        boolean signUpSuccess = memberService.signUp(dto.getEmail(), pwEncoder.encode(dto.getPassword()), "NONE");
         if(signUpSuccess == false)
         {
             //page 를 다르게
+            log.info("sugn up failed");
         }
         else
         {
             //page 를 다르게
+            log.info("sugn up success");
         }
         return "redirect:/";
     }

@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
 import jakarta.annotation.PostConstruct;
@@ -78,6 +79,9 @@ public class SimpleBoardSecureConfig {
             , "/static", "/status", "/images/**"
         };
         http.cors(cors->cors.disable())
+            .csrf(conf->{
+                conf.disable();
+            })
             .authorizeHttpRequests(req->
             {
                 req.dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
@@ -125,14 +129,15 @@ public class SimpleBoardSecureConfig {
                             //login success url 말고 직전에 있던 url 로 redirect 처리
                             HttpSessionRequestCache reqCache = new HttpSessionRequestCache();
                             var savedReq = reqCache.getRequest(request, response);
+                            var prevPageUrl = request.getSession().getAttribute("prevPage").toString(); 
                             String redirecUrl = savedReq.getRedirectUrl();
                             UserDetails user = (UserDetails)authentication.getPrincipal();
                             System.out.println("redirect url : %s".formatted(redirecUrl));
                             response.sendRedirect(redirecUrl);
                     })
                     .failureHandler((request, response, exception) -> {
-                        String username =request.getAttribute("email").toString();
-                        String password = request.getAttribute("password").toString();
+                        String username =request.getParameter("email").toString();
+                        String password = request.getParameter("password").toString();
                         System.out.println("user[%s] failed sign in. try password [%s]".formatted(username, password));
                     })
                 ;

@@ -1,16 +1,15 @@
 package com.example.simpleboard.service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.simpleboard.entity.MemberEntity;
 import com.example.simpleboard.repositoty.MemberRepositoty;
 
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -20,7 +19,6 @@ public class MemberService {
 
     @Autowired
     private MemberRepositoty memberRepository;
-
 
     public Optional<MemberEntity> findMemberByEmail(String email)
     {
