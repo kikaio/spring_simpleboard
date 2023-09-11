@@ -36,7 +36,7 @@ public class MemberController
         return "sign_up";
     }
     
-    @PostMapping(value="/sign-up-process")
+    @PostMapping("/sign-up-process")
     public String memberSignUpProcess(@ModelAttribute MemberFormDto dto) 
     {
         log.info(

@@ -130,6 +130,11 @@ public class SimpleBoardSecureConfig {
                             System.out.println("redirect url : %s".formatted(redirecUrl));
                             response.sendRedirect(redirecUrl);
                     })
+                    .failureHandler((request, response, exception) -> {
+                        String username =request.getAttribute("email").toString();
+                        String password = request.getAttribute("password").toString();
+                        System.out.println("user[%s] failed sign in. try password [%s]".formatted(username, password));
+                    })
                 ;
             })
             .logout(req->{
