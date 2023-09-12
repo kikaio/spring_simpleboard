@@ -10,9 +10,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.DefaultRedirectStrategy;
+import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.DispatcherType;
@@ -23,9 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 import java.util.Optional;
-
-import org.apache.catalina.authenticator.SavedRequest;
-
 
 @Configuration
 @EnableMethodSecurity
@@ -74,14 +75,12 @@ public class SimpleBoardSecureConfig {
 
         String[] permitAlls = {
             indexUrl
-            , signUpUrl, signUpProcessUrl, signInUrl
+            , signUpProcessUrl, signInUrl
             , "/member/list"
             , "/static", "/status", "/images/**"
         };
         http.cors(cors->cors.disable())
-            .csrf(conf->{
-                conf.disable();
-            })
+            .csrf(conf->conf.disable())
             .authorizeHttpRequests(req->
             {
                 req.dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
@@ -123,21 +122,52 @@ public class SimpleBoardSecureConfig {
                     .loginProcessingUrl(signInProcessUrl)
                     .usernameParameter("email")
                     .passwordParameter("password")
-                    .defaultSuccessUrl(signInSuccessUrl, true)
-                    .permitAll()
-                    .successHandler((HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
-                            UserDetails user = (UserDetails)authentication.getPrincipal();
+                    //.defaultSuccessUrl(signInSuccessUrl, true)
+                    .permitAll();
+                
+                conf.successHandler((HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> 
+                    {
                             //login success url 말고 직전에 있던 url 로 redirect 처리
-                            String redirecUrl = request.getHeader("Referer");
-                            System.out.println("redirect url : %s".formatted(redirecUrl));
-                            response.sendRedirect(redirecUrl);
+                            var session = request.getSession(false);
+                            if(session != null)
+                            {
+                                session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+                            }
+                            final var requestCache = new HttpSessionRequestCache(); 
+                            SavedRequest savedRequest = requestCache.getRequest(request, response);
+                            
+                            String redirectUrl = indexUrl;
+                            String prevPage = (String)session.getAttribute("prevPage");
+                            if(prevPage != null)
+                            {
+                                session.removeAttribute("prevPage");
+                            }
+                            if(savedRequest != null)
+                            {
+                                redirectUrl = savedRequest.getRedirectUrl();
+                            }
+                            else if(prevPage != null && !prevPage.equals(""))
+                            {
+                                if(prevPage.equals(signInUrl))
+                                {
+                                    redirectUrl = indexUrl;
+                                }
+                                else
+                                {
+                                    redirectUrl = prevPage;
+                                }
+                            }
+                            log.info("login success, redirect to [%s]".formatted(redirectUrl));
+
+                            RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+                            redirectStrategy.sendRedirect(request, response, redirectUrl);
                     })
-                    .failureHandler((request, response, exception) -> {
+                    .failureHandler((request, response, exception) -> 
+                    {
                         String username =request.getParameter("email").toString();
                         String password = request.getParameter("password").toString();
                         System.out.println("user[%s] failed sign in. try password [%s]".formatted(username, password));
-                    })
-                ;
+                    });
             })
             .logout(req->{
                 req.logoutUrl(signOutUrl)
@@ -147,7 +177,7 @@ public class SimpleBoardSecureConfig {
                             session.invalidate();
                     })
                     .logoutSuccessHandler((request, response, authentication) -> {
-                        response.sendRedirect(signInUrl);
+                        response.sendRedirect(indexUrl);
                     })
                 ;
             })

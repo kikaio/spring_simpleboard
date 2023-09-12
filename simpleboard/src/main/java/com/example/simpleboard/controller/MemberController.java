@@ -19,6 +19,7 @@ import com.example.simpleboard.dto.MemberFormDto;
 import com.example.simpleboard.entity.MemberEntity;
 import com.example.simpleboard.service.MemberService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -43,28 +44,36 @@ public class MemberController
     @PostMapping("/sign-up-process")
     public String memberSignUpProcess(@ModelAttribute MemberFormDto dto) 
     {
+        String cryptPw = pwEncoder.encode(dto.getPassword());
         log.info(
-            "sign-up-process called, email[%s] plane pw[%s]"
-                .formatted(dto.getEmail(), dto.getPassword())
+            "sign-up-process called, email[%s] plane pw[%s], encrypted pw[%s]"
+                .formatted(dto.getEmail(), dto.getPassword(), cryptPw)
         );
 
-        boolean signUpSuccess = memberService.signUp(dto.getEmail(), pwEncoder.encode(dto.getPassword()), "NONE");
+        boolean signUpSuccess = memberService.signUp(dto.getEmail(), cryptPw, "NONE");
         if(signUpSuccess == false)
         {
             //page 를 다르게
-            log.info("sugn up failed");
+            log.info("sign up failed");
         }
         else
         {
             //page 를 다르게
-            log.info("sugn up success");
+            log.info("sign up success");
         }
         return "redirect:/";
     }
 
     @GetMapping("/sign-in")
-    public String memberSignIn()
+    public String memberSignIn(HttpServletRequest request)
     {
+        //log.info("this addr : [%d]".formatted(this.hashCode()));
+        String url = request.getHeader("Referer");
+        if(url != null && !url.contains("sign-in"))
+        {
+            request.getSession().setAttribute("prevPage", url);
+            //log.info("prevPage url set [%s]".formatted(url));
+        }
         log.info("memberSignIn called");
         return "sign_in";
     }
