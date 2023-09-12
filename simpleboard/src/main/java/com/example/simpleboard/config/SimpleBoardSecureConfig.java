@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -62,6 +63,17 @@ public class SimpleBoardSecureConfig {
     // }
 
     @Bean
+    public WebSecurityCustomizer webSecurityCustumizer()
+    {
+        final String faviconPath = "/favicon.ico";
+        return (web)->{
+            web.ignoring().requestMatchers(
+                faviconPath
+            );
+        };
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
     {
         final String indexUrl = "/";
@@ -77,7 +89,7 @@ public class SimpleBoardSecureConfig {
             indexUrl
             , signUpProcessUrl, signInUrl
             , "/member/list"
-            , "/static", "/status", "/images/**"
+            , "/static", "/static/favicon.ico", "/status", "/images/**"
         };
         http.cors(cors->cors.disable())
             .csrf(conf->conf.disable())
