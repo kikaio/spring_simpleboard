@@ -126,12 +126,9 @@ public class SimpleBoardSecureConfig {
                     .defaultSuccessUrl(signInSuccessUrl, true)
                     .permitAll()
                     .successHandler((HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
-                            //login success url 말고 직전에 있던 url 로 redirect 처리
-                            HttpSessionRequestCache reqCache = new HttpSessionRequestCache();
-                            var savedReq = reqCache.getRequest(request, response);
-                            var prevPageUrl = request.getSession().getAttribute("prevPage").toString(); 
-                            String redirecUrl = savedReq.getRedirectUrl();
                             UserDetails user = (UserDetails)authentication.getPrincipal();
+                            //login success url 말고 직전에 있던 url 로 redirect 처리
+                            String redirecUrl = request.getHeader("Referer");
                             System.out.println("redirect url : %s".formatted(redirecUrl));
                             response.sendRedirect(redirecUrl);
                     })
