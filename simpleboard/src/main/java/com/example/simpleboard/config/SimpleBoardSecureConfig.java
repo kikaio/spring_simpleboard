@@ -89,13 +89,16 @@ public class SimpleBoardSecureConfig {
         final String signUpUrl = "/member/sign-up";
         final String signUpProcessUrl = "/member/sign-up-process";
         final String signOutUrl = "/member/sign-out"; 
+        final String testAuthentication = "/test-authentication";
+        final String testAuthorization = "/test-authorization";
 
         String[] permitAlls = {
             indexUrl
             , signInUrl, signInProcessUrl 
             , signUpUrl, signUpProcessUrl
+            , testAuthentication, testAuthorization
             , "/member/list"
-            , "/static", "/static/favicon.ico"
+            , "/static", "/favicon.ico"
             , "/error", "/status", "/images/**"
         };
         http.cors(cors->cors.disable())
@@ -146,40 +149,45 @@ public class SimpleBoardSecureConfig {
                 
                 conf.successHandler((HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> 
                     {
-                            //login success url 말고 직전에 있던 url 로 redirect 처리
-                            var session = request.getSession(false);
-                            if(session != null)
+                        //login success url 말고 직전에 있던 url 로 redirect 처리
+                        var session = request.getSession(false);
+                        if(session != null)
+                        {
+                            session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+                        }
+                        final var requestCache = new HttpSessionRequestCache(); 
+                        SavedRequest savedRequest = requestCache.getRequest(request, response);
+                        
+                        String redirectUrl = indexUrl;
+                        String prevPage = (String)session.getAttribute("prevPage");
+                        if(prevPage != null)
+                        {
+                            session.removeAttribute("prevPage");
+                        }
+                        if(savedRequest != null)
+                        {
+                            redirectUrl = savedRequest.getRedirectUrl();
+                        }
+                        else if(prevPage != null && !prevPage.equals(""))
+                        {
+                            if(prevPage.equals(signInUrl))
                             {
-                                session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+                                redirectUrl = indexUrl;
                             }
-                            final var requestCache = new HttpSessionRequestCache(); 
-                            SavedRequest savedRequest = requestCache.getRequest(request, response);
-                            
-                            String redirectUrl = indexUrl;
-                            String prevPage = (String)session.getAttribute("prevPage");
-                            if(prevPage != null)
+                            else
                             {
-                                session.removeAttribute("prevPage");
+                                redirectUrl = prevPage;
                             }
-                            if(savedRequest != null)
-                            {
-                                redirectUrl = savedRequest.getRedirectUrl();
-                            }
-                            else if(prevPage != null && !prevPage.equals(""))
-                            {
-                                if(prevPage.equals(signInUrl))
-                                {
-                                    redirectUrl = indexUrl;
-                                }
-                                else
-                                {
-                                    redirectUrl = prevPage;
-                                }
-                            }
-                            log.info("login success, redirect to [%s]".formatted(redirectUrl));
+                        }
+                        else
+                        {
+                            redirectUrl=indexUrl;
+                        }
 
-                            RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
-                            redirectStrategy.sendRedirect(request, response, redirectUrl);
+                        log.info("login success, redirect to [%s]".formatted(redirectUrl));
+
+                        RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+                        redirectStrategy.sendRedirect(request, response, redirectUrl);
                     })
                     .failureHandler((request, response, exception) -> 
                     {
