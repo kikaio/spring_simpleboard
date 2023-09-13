@@ -66,9 +66,14 @@ public class SimpleBoardSecureConfig {
     public WebSecurityCustomizer webSecurityCustumizer()
     {
         final String faviconPath = "/favicon.ico";
+        final String errorPath = "/error";
+        String[] patterns = {
+            // faviconPath
+            // , errorPath
+        };
         return (web)->{
             web.ignoring().requestMatchers(
-                faviconPath
+                patterns
             );
         };
     }
@@ -87,9 +92,11 @@ public class SimpleBoardSecureConfig {
 
         String[] permitAlls = {
             indexUrl
-            , signUpProcessUrl, signInUrl
+            , signInUrl, signInProcessUrl 
+            , signUpUrl, signUpProcessUrl
             , "/member/list"
-            , "/static", "/static/favicon.ico", "/status", "/images/**"
+            , "/static", "/static/favicon.ico"
+            , "/error", "/status", "/images/**"
         };
         http.cors(cors->cors.disable())
             .csrf(conf->conf.disable())

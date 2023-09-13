@@ -13,21 +13,28 @@
         </header>
         <div id="content">
             <p>Hello, World!</p>
+            {{#username}}
+            <p>your name is {{username}}!, right?</p>
+            {{/username}}
             <img src="/images/index_icon.jpg" alt="img not exist"/>
+            {{#username}}
             <div>
                 <button type="button" onclick="location.href='/member/sign-in'">go to sign in</button>
             </div>
             <div>
                 <button type="button" onclick="location.href='/member/sign-up'">go to sign up</button>
             </div>
+            {{/username}}
+            {{^username}}
             <div>
                 <button name="sign_out_btn" type="button" onclick="onSignOutClicked()">go to sign out</button>
             </div>
+            {{/username}}
             <div>
                 <button type="button" onclick="location.href='/member/list'">check member list</button>
-            </div>
-            <div>
                 <button type="button" onclick="location.href='/status'">check status</button>
+                <button type="button" onclick="location.href='/test-authentication'">do test for authentication</button>
+                <button type="button" onclick="location.href='/test-authorization'">do test for authorization</button>
             </div>
         </div>
     </body>
