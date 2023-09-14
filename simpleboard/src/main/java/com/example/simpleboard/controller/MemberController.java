@@ -68,14 +68,16 @@ public class MemberController
     public String memberSignIn(HttpServletRequest request)
     {
         //log.info("this addr : [%d]".formatted(this.hashCode()));
-        String requestURI = request.getRequestURI();
-        log.info("req Uri [%s]".formatted(requestURI));
-                
         String url = request.getHeader("Referer");
         if(url != null && !url.contains("sign-in"))
         {
             request.getSession().setAttribute("prevPage", url);
             log.info("prevPage url set [%s]".formatted(url));
+        }
+        else
+        {
+            final String indexPath = "/"; 
+            request.getSession().setAttribute("prevPage", indexPath);
         }
         log.info("memberSignIn called");
         return "sign_in";
