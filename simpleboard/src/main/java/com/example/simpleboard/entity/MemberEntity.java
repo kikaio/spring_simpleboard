@@ -1,8 +1,13 @@
 package com.example.simpleboard.entity;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,6 +45,8 @@ public class MemberEntity {
     
     private boolean isLocked;
 
+    private Collection<SimpleGrantedAuthority> authorities;
+
     public void doLock()
     {
         isLocked = true;
@@ -48,5 +55,14 @@ public class MemberEntity {
     public void doUnlock()
     {
         isLocked = false;
+    }
+
+    public void setAuthorities(List<AuthorityEntity> entities)
+    {
+        authorities = new ArrayList<SimpleGrantedAuthority>();
+        for(AuthorityEntity entity : entities)
+        {
+            authorities.add(new SimpleGrantedAuthority(entity.getAuthority()));
+        }
     }
 }

@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Authority {
+public class AuthorityEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

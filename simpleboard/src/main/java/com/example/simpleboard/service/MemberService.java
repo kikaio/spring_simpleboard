@@ -22,7 +22,12 @@ public class MemberService {
 
     public Optional<MemberEntity> findMemberByEmail(String email)
     {
-        return memberRepository.findByEmail(email);
+        var member = memberRepository.findByEmail(email);
+        if(member.isPresent())
+        {
+            
+        }
+        return ;
     }
 
     private boolean validCheckForEmail(String email)
