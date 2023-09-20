@@ -178,5 +178,45 @@ ADMIN을 제외하면 본인이 작성한 게시글에 대해서만 "삭제"를 
 =============================================
 각 Entity 설계
 
+member : 회원 정보
+ . id
+ . email
+ . password
+ . mdate
+ . cdate
+ . list - role
+ . list - authority
+ 
+board : 게시판
+ . id
+ . name
+ 
+post : 게시글
+ . id
+ . board
+ . member
+ . title
+ . content
+ . cdate
+ . mdate
+
+comment : 댓글
+ . id
+ . member
+ . post
+ . comment
+ . cdate
+ . mdate
+ 
+role : 역할
+ . id
+ . name
+ . list - authority
+ 
+authority : 권한
+ . id
+ . name
+ . list - role
+
 =============================================
 각 Entity 별 상관관계 정의
