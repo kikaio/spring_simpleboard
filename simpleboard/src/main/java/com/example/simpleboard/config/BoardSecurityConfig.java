@@ -16,12 +16,15 @@ public class BoardSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
     {
         final String[] permitAllUrls = {
-            "/", "/favicon.ico"
+            "/"
         };
-        http.authorizeHttpRequests(custom->{
+        http
+        .csrf(custom->{ custom.disable();})
+        .cors(custom->{ custom.disable();})
+        .authorizeHttpRequests(custom->{
             custom
                 .requestMatchers(permitAllUrls).permitAll()
-                .anyRequest().denyAll();
+                .anyRequest().permitAll(); //member 작업 전까진 모두 permit All 처리.
         })
         ;
         return http.build();
