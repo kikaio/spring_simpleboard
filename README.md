@@ -272,7 +272,7 @@ service 개요 : post
  - post에 속할 수 있는 comment에 대해서 조회, 생성, 수정, 삭제를 담당한다.
 
 ===============================================
-각 [member]service에 따른 url 과 method 구조
+각 [member]contorller에 따른 url 과 method 구조
 
 [member]
  - member 목록 조회  : GET , ~/members
@@ -300,7 +300,7 @@ service 개요 : post
  - authority 삭제 : DELETE , ~/authorities/{id}
  
 ===================================================
-각 [baord] service에 따른 url 과 method 구조
+각 [baord] contorller에 따른 url 과 method 구조
 [board]
  - board 목록 조회 : GET , ~/boards
  - board 상세 조회 : GET , ~/boards/{id}
@@ -311,7 +311,7 @@ service 개요 : post
  - board 삭제 : DELETE , ~/boards/{id}
 
 ===================================================
-각 [post]service 에 따른 url 과 method 구조
+각 [post]contorller 에 따른 url 과 method 구조
 [post]
  - post 상세 조회 : GET , ~/posts/{id}
  - post 생성 : POST , ~/posts/create
