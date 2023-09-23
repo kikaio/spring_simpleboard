@@ -7,6 +7,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
+import jakarta.servlet.DispatcherType;
+
 @Configuration
 @EnableMethodSecurity
 public class BoardSecurityConfig {
@@ -23,6 +25,7 @@ public class BoardSecurityConfig {
         .cors(custom->{ custom.disable();})
         .authorizeHttpRequests(custom->{
             custom
+                .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
                 .requestMatchers(permitAllUrls).permitAll()
                 .anyRequest().permitAll(); //member 작업 전까진 모두 permit All 처리.
         })
@@ -41,10 +44,13 @@ public class BoardSecurityConfig {
         };
         http.authorizeHttpRequests(custom->{
             custom
-            .requestMatchers(exceptUrls).permitAll()
-            .anyRequest().permitAll()
+                .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
+                .requestMatchers(exceptUrls).permitAll()
+                .anyRequest().permitAll()
             ;
         })
+        .csrf(custom->{ custom.disable();})
+        .cors(custom->{ custom.disable();})
         .requestCache(custom->{
             custom.disable();
         })

@@ -12,7 +12,21 @@
             <h1>Welcome to My Awesome Site - Board Update Page</h1>
         </header>
         <div id="content">
-            <p>Hello, World!</p>
+            {{#board}}
+            <form action="/boards/{{id}}" method="post">
+                <div>
+                    <input type="hidden" name="id" value={{id}} />
+                    <label>origin name : {{name}}</label><p></p>
+                    <label>new name : </label> <input type="text" name="name" />
+                </div>
+                <div>
+                    <input type="submit" value="do update" />
+                </div>
+            </form>
+            {{/board}}
+            {{^board}}
+            <label>not exist board</label>
+            {{/board}}
         </div>
         <script></script>
     </body>

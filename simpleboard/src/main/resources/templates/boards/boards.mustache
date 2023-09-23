@@ -14,12 +14,38 @@
             <h1>Welcome to My Awesome Site - Boards List</h1>
         </header>
         <div id="content">
-            <p>Hello, World!</p>
+        <table>
+            <th>
+                <div>
+                    <tr>
+                        <tr>id</tr>
+                        <tr>baord name</tr>
+                    </tr>
+                </div>
+            </th>
+            {{#boards}}
+            <tr>
+                <td>{{id}}</td>
+                <td>{{name}}</td>
+                <td>
+                    <button type="button" onclick="location.href='/boards/update?id={{id}}'">update</button>
+                    <button type="button" onclick="doDelete({{id}})">delete</button>
+                </td>
+            </tr>
+            {{/boards}}
+        </table>
         </div>
         <div>
-            <button type="button" onclick="location.href='/boards/create'">create_board</button>
+            <button type="button" onclick="location.href='/boards/create'">board create</button>
         </div>
     </body>
     <script>
+    function doDelete(num_id)
+    {
+        var http = new XMLHttpRequest();
+        var url_to = window.location.origin + "/boards/"+num_id;
+        http.open("DELETE", url_to);
+        http.send();
+    }
     </script>
 </html>
