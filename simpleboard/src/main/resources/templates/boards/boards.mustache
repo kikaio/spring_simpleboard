@@ -45,6 +45,10 @@
         var http = new XMLHttpRequest();
         var url_to = window.location.origin + "/boards/"+num_id;
         http.open("DELETE", url_to);
+        http.onreadystatechange = function()
+        {
+            location.reload();
+        };
         http.send();
     }
     </script>

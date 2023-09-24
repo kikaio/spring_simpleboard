@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import javax.naming.NameNotFoundException;
 
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.web.DefaultRedirectStrategy;
+import org.springframework.security.web.RedirectStrategy;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -142,11 +147,11 @@ public class BoardController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteBaord(
+    public ModelAndView deleteBaord(
         @PathVariable(name = "id", required = true) long id
         , HttpServletRequest request
         , HttpServletResponse response
-        ) throws IOException
+        )
     {
         // todo : delete board and posts, etc.
         for(int idx = 0; idx < boards.size(); ++idx)
@@ -159,6 +164,7 @@ public class BoardController {
             }
         }
         log.info("method is %s".formatted(request.getMethod()));
-        response.sendRedirect(request.getContextPath() + "/boards");
+        request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.SEE_OTHER);
+        return new ModelAndView("redirect:/boards");
     }
 }
