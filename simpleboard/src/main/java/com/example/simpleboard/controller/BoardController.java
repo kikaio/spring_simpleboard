@@ -2,6 +2,7 @@ package com.example.simpleboard.controller;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.naming.NameNotFoundException;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.simpleboard.dto.BoardDto;
+import com.example.simpleboard.entity.Board;
+import com.example.simpleboard.service.BoardService;
 
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -27,21 +30,23 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BoardController {
 
-    ArrayList<BoardDto> boards = new ArrayList<>();
-    @PostConstruct
-    public void init()
+    private final BoardService boardService;
+
+    public BoardController(BoardService boardService)
     {
-        for(int idx = 0; idx < 5; idx++)
-        {
-            boards.add(new BoardDto((long)idx, "b_%d".formatted(idx)));
-        }
+        this.boardService = boardService;
     }
 
     @GetMapping()
     public String getBoards(Model model)
     {
+        List<BoardDto> boards = new ArrayList<BoardDto>();
+        List<Board> boardEntities = boardService.getBoards();
+        for(var entity : boardEntities)
+        {
+            boards.add(new BoardDto(entity));
+        }
         model.addAttribute("boards", boards);
-        //todo : get boards list
         return "boards/boards";
     }
 
@@ -52,21 +57,12 @@ public class BoardController {
         ) throws Exception
     {
         //todo : get board, post, etc using DTO
-        BoardDto target = null;
-        for(int idx = 0; idx < boards.size(); ++idx)
-        {
-            if(boards.get(idx).getId() == id)
-            {
-                target= boards.get(idx);
-                break;
-            }
-        }
+        Board target = boardService.getBoard(id);
         if(target == null)
-        {
-            throw new Exception("not exist board[%llu].".formatted(id));
-        }
+            throw new Exception("not exist board[%d].".formatted(id));
 
-        model.addAttribute("board", target);
+        BoardDto targetDto = new BoardDto(target);
+        model.addAttribute("board", targetDto);
         return "boards/board";
     }
 
@@ -82,9 +78,15 @@ public class BoardController {
         @RequestParam(name="name", required = true) String name
         )
     {
-        BoardDto board =new BoardDto((long)boards.size(), name); 
-        boards.add(board);
-        //todo : create board using name., redirect to getBoards
+        boolean success = boardService.createBoard(name);
+        if(success)
+        {
+            log.info("board[%s] created".formatted(name));
+        }
+        else
+        {
+            log.info("board[%s] create was failed".formatted(name));
+        }
         return "redirect:/boards";
     }
 
@@ -94,48 +96,29 @@ public class BoardController {
         , Model model
         ) throws Exception
     {
-        BoardDto target = null;
-        for(var board : boards)
-        {
-            if(board.getId() == id)
-            {
-                target = board;
-                break;
-            }
-        }
-
+        Board target = boardService.getBoard(id);
         if(target == null)
-        {
             throw new NameNotFoundException();
-        }
-        else
-        {
-            model.addAttribute("board", target);
-        }
-        //todo : set model data
+
+        BoardDto targetDto = new BoardDto(target);
+        model.addAttribute("board", targetDto);
         return "boards/board_update";
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/{board_id}")
     public String updateBoard(
-        @PathVariable(name = "id", required = true) long id
-        , @RequestParam(name = "name", required = true) String name
-        ) throws Exception
+        @PathVariable(name = "board_id", required = true) long board_id
+        , BoardDto dto
+        )
     {
-        //todo : update board's name using request param. => someday change to DTO
-        BoardDto target = null;
-        for(var board : boards)
+        boolean successed = boardService.updateBoard(board_id, dto.toEntity());
+        if(successed)
         {
-            if(board.getId() == id)
-            {
-                target = new BoardDto(id, name);
-                break;
-            }
+            log.info("board[%d:%s] was updated".formatted(board_id, dto.getName()));
         }
-
-        if(target == null)
+        else
         {
-            throw new NameNotFoundException();
+            log.info("board[%d:%s] update failed, maybe not exist in repo".formatted(board_id, dto.getName()));
         }
         return "redirect:/boards";
     }
@@ -145,16 +128,16 @@ public class BoardController {
         @PathVariable(name = "id", required = true) long id
         )
     {
-        // todo : delete board and posts, etc.
-        for(int idx = 0; idx < boards.size(); ++idx)
+        boolean success = boardService.deleteBoard(id);
+        if(success)
         {
-            BoardDto target = boards.get(idx);
-            if(target.getId() == id)
-            {
-                boards.remove(target);
-                break;
-            }
+            log.info("Board[%d] deleted.".formatted(id));
         }
+        else
+        {
+            log.info("Board[%d] delete failed, maybe not exist in repo.".formatted(id));
+        }
+
         var modelAndView = new ModelAndView("redirect:/boards");
         modelAndView.setStatus(HttpStatus.SEE_OTHER);
         return modelAndView;

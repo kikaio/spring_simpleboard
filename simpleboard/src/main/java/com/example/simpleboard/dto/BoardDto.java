@@ -6,12 +6,14 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@Setter
 public class BoardDto {
     private Long id;
     private String name;
@@ -24,6 +26,12 @@ public class BoardDto {
             .build();
     }
 
+    public BoardDto(Board board)
+    {
+        this.id = board.getId();
+        this.name = board.getName();
+    }
+    
     public void fromEntity(Board board)
     {
         this.id = board.getId();
