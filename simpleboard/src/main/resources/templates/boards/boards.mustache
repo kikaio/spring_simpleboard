@@ -45,10 +45,12 @@
         var http = new XMLHttpRequest();
         var url_to = window.location.origin + "/boards/"+num_id;
         http.open("DELETE", url_to);
-        http.onreadystatechange = function()
-        {
-            location.reload();
-        };
+        http.addEventListener("readystatechange", function(){
+            if(http.readyState === 4 && http.status === 200)
+            {
+                window.location.reload(true);
+            }
+        });
         http.send();
     }
     </script>

@@ -9,6 +9,7 @@ import javax.naming.NameNotFoundException;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.stereotype.Controller;
@@ -149,8 +150,6 @@ public class BoardController {
     @DeleteMapping("/{id}")
     public ModelAndView deleteBaord(
         @PathVariable(name = "id", required = true) long id
-        , HttpServletRequest request
-        , HttpServletResponse response
         )
     {
         // todo : delete board and posts, etc.
@@ -163,8 +162,8 @@ public class BoardController {
                 break;
             }
         }
-        log.info("method is %s".formatted(request.getMethod()));
-        request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.SEE_OTHER);
-        return new ModelAndView("redirect:/boards");
+        var modelAndView = new ModelAndView("redirect:/boards");
+        modelAndView.setStatus(HttpStatus.SEE_OTHER);
+        return modelAndView;
     }
 }
