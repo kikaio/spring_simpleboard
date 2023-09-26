@@ -18,6 +18,11 @@ public class BoardDto {
     private Long id;
     private String name;
 
+    public BoardDto(Board board)
+    {
+        fromEntity(board);
+    }
+    
     public Board toEntity()
     {
         return Board.builder()
@@ -26,12 +31,6 @@ public class BoardDto {
             .build();
     }
 
-    public BoardDto(Board board)
-    {
-        this.id = board.getId();
-        this.name = board.getName();
-    }
-    
     public void fromEntity(Board board)
     {
         this.id = board.getId();

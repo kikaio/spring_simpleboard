@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.simpleboard.dto.BoardDto;
+import com.example.simpleboard.dto.PostDto;
 import com.example.simpleboard.entity.Board;
 import com.example.simpleboard.service.BoardService;
+import com.example.simpleboard.service.PostService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,10 +32,15 @@ import lombok.extern.slf4j.Slf4j;
 public class BoardController {
 
     private final BoardService boardService;
+    private final PostService postService;
 
-    public BoardController(BoardService boardService)
+    public BoardController(
+        BoardService boardService
+        , PostService postService
+    )
     {
         this.boardService = boardService;
+        this.postService = postService;
     }
 
     @GetMapping()
@@ -63,6 +69,16 @@ public class BoardController {
 
         BoardDto targetDto = new BoardDto(target);
         model.addAttribute("board", targetDto);
+        //todo : model include posts.
+        List<PostDto> postsDto = new ArrayList<>();
+        var posts = postService.getPostsUsingBoard(target);
+        for(var post : posts)
+        {
+            postsDto.add(new PostDto(post));
+        }
+
+        postsDto.add(new PostDto(1L, "title", "contents"));
+        model.addAttribute("posts", postsDto);
         return "boards/board";
     }
 

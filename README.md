@@ -258,6 +258,14 @@ post는 여러 comment를 보유할 수 있다.
  => ManyToOne : comment가 Many
  관계 주체 : post로 지정.
  
+board는 여러 post를 보유할 수 있다.
+한개의 post는 하나의 board만 지닐 수 있다.
+ -> board와 post : onToMany
+ -> post와 board : ManyToOne
+ => ManyToOne : post가 Many
+ 관계주체 : post로 지정.
+  -> post가 board를 단방향으로 지니면 될듯.
+ 
 ================================================
 service 개요 : member
  - member의 조회, 가입, 로그인, 로그아웃, 탈퇴를 담당한다.
