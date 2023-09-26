@@ -10,6 +10,7 @@ import com.example.simpleboard.repository.PostRepository;
 
 @Service
 public class PostService {
+
     private final PostRepository postRepository;
     
     public PostService(PostRepository postRepository)
@@ -22,8 +23,4 @@ public class PostService {
         return postRepository.findByBoard(board);
     }
 
-    public List<Post> getPostsUsingBoardId(long id)
-    {
-        return postRepository.findByBoard_BoarId(id);
-    }
 }

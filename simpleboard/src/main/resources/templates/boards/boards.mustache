@@ -28,6 +28,7 @@
                 <td>{{id}}</td>
                 <td>{{name}}</td>
                 <td>
+                    <button type="button" onclick="location.href='/boards/{{id}}'">select</button>
                     <button type="button" onclick="location.href='/boards/update?id={{id}}'">update</button>
                     <button type="button" onclick="doDelete({{id}})">delete</button>
                 </td>

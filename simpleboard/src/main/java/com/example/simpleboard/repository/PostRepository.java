@@ -12,7 +12,5 @@ public interface PostRepository extends CrudRepository<Post, Long>
     @Override
     public List<Post> findAll();
     
-    public List<Post> findByBoard_BoarId(long board_id);
-
     public List<Post> findByBoard(Board board);
 }

@@ -20,6 +20,8 @@ public class PostDto {
     
     private String content;
 
+    private Long board_id;
+
     public PostDto(Post post)
     {
         fromEntity(post);
