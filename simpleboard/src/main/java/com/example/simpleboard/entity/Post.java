@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Entity
@@ -36,5 +37,18 @@ public class Post
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "board_id", referencedColumnName = "id")
     @ToString.Exclude
+    @Setter
     private Board board;
+
+    public void Update(Post other)
+    {
+        if(other.title != null && this.title != other.title)
+        {
+            this.title= other.title;
+        }
+        if(other.content != null && this.content != other.content)
+        {
+            this.content = other.content;
+        }
+    }
 }

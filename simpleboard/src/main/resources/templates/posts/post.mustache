@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>My Awesome Site</title>
+    </head>
+        <header>
+            <h1>Board name is {{board_name}}, post detail page</h1>
+        </header>
+        {{#post}}
+        <div id="content">
+            <div>
+            <label>title : {{title}}</label>
+            </div>
+            <div>
+            <label>contents</label>
+            <br>
+            <p>{{content}}</p>
+            </div>
+        </div>
+        <div>
+        <button type="button" onclick="location.href='/boards/{{board_id}}'">go back to board</button>
+        </div>
+        {{/post}}
+        <script></script>
+    </body>
+</html>

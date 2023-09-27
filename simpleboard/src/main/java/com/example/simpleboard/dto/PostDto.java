@@ -40,6 +40,10 @@ public class PostDto {
         this.id = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
+        if(post.getBoard() != null)
+        {
+            board_id = post.getBoard().getId();
+        }
         return ;
     }
 }

@@ -76,8 +76,6 @@ public class BoardController {
         {
             postsDto.add(new PostDto(post));
         }
-
-        postsDto.add(new PostDto(1L, "title", "contents"));
         model.addAttribute("posts", postsDto);
         return "boards/board";
     }

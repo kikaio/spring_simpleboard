@@ -25,22 +25,23 @@
             {{#posts}}
             <tr>
                 <td>{{id}}</td>
-                <td><a href="/posts/{{id}}">{{title}}</a></td>
-                <td><button type="button" onclick="localtion.href='/posts/update'">update</button></td>
+                <td><a href="/posts/{{id}}?board_id={{board.id}}">{{title}}</a></td>
+                <td><button type="button" onclick="location.href='/posts/update?id={{id}}'">update</button></td>
                 <td><button type="button" onclick="doPostDelete({{id}})">delete</button></td>
             </tr>
             {{/posts}}
             </table>
             </div>
             <div>
-            <button type="button"  onclick="location.href='/posts/create?board_id={{board.id}}'">create post on this board</button>
+            <button type="button" onclick="location.href='/boards'">go to board list</button>
+            <button type="button" onclick="location.href='/posts/create?board_id={{board.id}}&board_name={{board.name}}'">create post on this board</button>
             </div>
         </div>
         <script>
         function doPostDelete(num_id)
         {
             var http = new XMLHttpRequest(); 
-            var url_to = window.localtion.origin+"posts/"+num_id;
+            var url_to = window.location.origin + "/posts/" + num_id;
             http.open("DELETE", url_to);
             http.addEventListener("readystatechange", function(){
                 if(http.readyState === 4 && http.status === 200)

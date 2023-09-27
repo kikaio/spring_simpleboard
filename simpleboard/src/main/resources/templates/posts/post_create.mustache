@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>My Awesome Site</title>
+    </head>
+    <body>
+        <header>
+            <h1>Board name is {{board_name}}, post create page</h1>
+        </header>
+        <div id="content">
+            <form method="POST" action="/posts/create">
+                <input name = "board_id" type="hidden" value={{board_id}}> 
+                <div>
+                <label>post title : </label><input type="text" name = "title">
+                </div>
+                <div>
+                <label>contents : </label><br/><input type="text" name = "content">
+                </div>
+                <div>
+                <input type="submit" value="post create!">
+                </div>
+            </form>
+        </div>
+        <script>
+        </script>
+    </body>
+</html>
