@@ -41,6 +41,7 @@ public class Post
     @JoinColumn(name = "board_id", referencedColumnName = "id")
     @ToString.Exclude
     @Setter
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Board board;
 
     public void Update(Post other)
