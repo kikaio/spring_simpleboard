@@ -1,6 +1,8 @@
 package com.example.simpleboard.controller;
 
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.example.simpleboard.dto.PostDto;
 import com.example.simpleboard.entity.Board;
@@ -135,7 +138,7 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public String deletePost(
+    public ModelAndView deletePost(
         @PathVariable(name = "id", required = true) long id
      ) throws Exception
     {
@@ -154,7 +157,13 @@ public class PostController {
         {
             throw new Exception("post[%d] delete failed, something invalid".formatted(id));
         }
+        else
+        {
+            log.info("post[title : %s] was deleted.".formatted(post.getTitle()));
+        }
         //todo : delete post and comments.
-        return "redirect:/boards/%d".formatted(board_id);
+        var modelAndView = new ModelAndView("redirect:/boards/%d".formatted(board_id));
+        modelAndView.setStatus(HttpStatus.SEE_OTHER);
+        return modelAndView;
     }
 }
