@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>My Awesome Site</title>
+    </head>
+    <body>
+        <header>
+            <h1>Welcome to My Awesome Site - all posts page</h1>
+        </header>
+        <div id="content">
+            <div>
+                <table>
+                    <thead>
+                        <td>board name</td>
+                        <td>post id</td>
+                        <td>post title</td>
+                        <td>update</td>
+                        <td>delete</td>
+                    </thead>
+                    <tbody>
+                    {{#posts}}
+                        <tr>
+                            <td><a href="/boards/{{board.id}}">{{board.name}}</a></td>
+                            <td>{{id}}</td>
+                            <td><a href="/posts/{{id}}?board_id={{board.id}}">{{title}}</a></td>
+                            <td><button type="button" onclick="location.href='/posts/update?id={{id}}'">do it!</button></td>
+                            <td><button type="button" onclick="doPostDelete({{id}})">do it!</button></td>
+                        </tr>
+                    {{/posts}}
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <button type="button" onclick="location.href='/boards'">go to board list</button>
+            </div>
+        </div>
+        <script>
+        function doPostDelete(num_id)
+        {
+            var http = new XMLHttpRequest(); 
+            var url_to = window.location.origin + "/posts/" + num_id;
+            http.open("DELETE", url_to);
+            http.addEventListener("readystatechange", function(){
+                if(http.readyState === 4 && http.status === 200)
+                {
+                    window.location.reload(true);
+                }
+            });
+            http.send();
+        }
+        </script>
+    </body>
+</html>

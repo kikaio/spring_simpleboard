@@ -35,6 +35,17 @@ public class PostController {
         this.boardService = boardService;
     }
 
+    @GetMapping("")
+    public String getPosts(
+        Model model
+    ) throws Exception
+    {
+        //all post get.
+        var posts = postService.getPosts();
+        model.addAttribute("posts", posts);
+        return "/posts/posts";
+    }
+
     @GetMapping("/{id}")
     public String getPost(
         @PathVariable(name = "id", required = true) long id

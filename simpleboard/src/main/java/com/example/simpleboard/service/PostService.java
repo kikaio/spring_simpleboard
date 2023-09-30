@@ -21,6 +21,11 @@ public class PostService {
         this.postRepository = postRepository;
     }
 
+    public List<Post> getPosts()
+    {
+        return postRepository.findAll();
+    }
+
     public List<Post> getPostsUsingBoard(Board board)
     {
         return postRepository.findByBoard(board);

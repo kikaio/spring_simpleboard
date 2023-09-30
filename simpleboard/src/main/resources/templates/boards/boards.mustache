@@ -15,25 +15,30 @@
         </header>
         <div id="content">
         <table>
-            <th>
-                <div>
-                    <tr>
-                        <tr>id</tr>
-                        <tr>baord name</tr>
-                    </tr>
-                </div>
-            </th>
+        <thead>
+            <td>id</td>
+            <td>baord name</td>
+            <td>select</td>
+            <td>update</td>
+            <td>delete</td>
+        </thead>
+        <tbody>
             {{#boards}}
             <tr>
                 <td>{{id}}</td>
                 <td>{{name}}</td>
                 <td>
-                    <button type="button" onclick="location.href='/boards/{{id}}'">select</button>
-                    <button type="button" onclick="location.href='/boards/update?id={{id}}'">update</button>
-                    <button type="button" onclick="doDelete({{id}})">delete</button>
+                    <button type="button" onclick="location.href='/boards/{{id}}'">do it!</button>
+                </td>
+                <td>
+                    <button type="button" onclick="location.href='/boards/update?id={{id}}'">do it!</button>
+                </td>
+                <td>
+                    <button type="button" onclick="doDelete({{id}})">do it!</button>
                 </td>
             </tr>
             {{/boards}}
+        </tbody>
         </table>
         </div>
         <div>
