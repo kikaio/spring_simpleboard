@@ -37,7 +37,6 @@ public class PostService {
             var saved = postRepository.save(newPost);
             log.info("saved post : ".formatted(saved.toString()));
         } catch (Exception e) {
-            // TODO: handle exception
             return false;
         }
         return true;
@@ -61,7 +60,6 @@ public class PostService {
         try {
             postRepository.save(old);
         } catch (Exception e) {
-            // TODO: handle exception
             return false;
         }
         return true;

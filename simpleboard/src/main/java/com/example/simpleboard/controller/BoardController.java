@@ -142,9 +142,6 @@ public class BoardController {
         @PathVariable(name = "id", required = true) long id
         )
     {
-        //todo : delete all Post, and etc
-        
-
         boolean success = boardService.deleteBoard(id);
         if(success)
         {
