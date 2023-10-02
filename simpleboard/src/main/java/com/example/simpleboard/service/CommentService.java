@@ -13,9 +13,15 @@ public class CommentService {
  
     private final CommentRepository commentRepository;
 
+
     public CommentService(CommentRepository commentRepository)
     {
         this.commentRepository = commentRepository;
+    }
+
+    public List<Comment> getComments()
+    {
+        return commentRepository.findAll();
     }
 
     public List<Comment> getCommentsUsingPost(Post post)
@@ -32,10 +38,10 @@ public class CommentService {
     {
         try {
             commentRepository.save(comment);
+            return true;
         } catch (Exception e) {
             return false;
         }
-        return true;
     }
 
     public boolean updateComment(Comment newComment)

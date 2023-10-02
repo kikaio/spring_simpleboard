@@ -7,9 +7,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>My Awesome Site</title>
     </head>
-        <header>
-            <h1>Board name is {{board_name}}, post detail page</h1>
-        </header>
+    <header>
+        <h1>Board name is {{board_name}}, post detail page</h1>
+    </header>
+    <body>
         {{#post}}
         <div id="content">
             <div>
@@ -21,8 +22,11 @@
             <p>{{content}}</p>
             </div>
         </div>
+        {{#comments}}
+            {{> comment_partial}}
+        {{/comments}}
         <div>
-        <button type="button" onclick="location.href='/boards/{{board_id}}'">go back to board</button>
+            <button type="button" onclick="location.href='/boards/{{board_id}}'">go back to board</button>
         </div>
         {{/post}}
         <script></script>

@@ -1,5 +1,8 @@
 package com.example.simpleboard.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.example.simpleboard.entity.Comment;
@@ -25,8 +28,10 @@ public class CommentDto {
     private Long parentId;
 
     private String comment;
-
+    private boolean isDeleted = false;
     private boolean isParentLive = false;
+
+    private List<CommentDto> childs = new ArrayList<>();
 
     public CommentDto(Comment comment)
     {
@@ -68,4 +73,8 @@ public class CommentDto {
         ;
     }
 
+    public void addChild(CommentDto child)
+    {
+        childs.add(child);
+    } 
 }
