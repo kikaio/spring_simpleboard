@@ -15,6 +15,7 @@ import com.example.simpleboard.dto.PostDto;
 import com.example.simpleboard.entity.Board;
 import com.example.simpleboard.entity.Post;
 import com.example.simpleboard.service.BoardService;
+import com.example.simpleboard.service.CommentService;
 import com.example.simpleboard.service.PostService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,11 +27,17 @@ public class PostController {
     
     private final PostService postService;
     private final BoardService boardService;
+    private final CommentService commentService;
 
-    public PostController(PostService postService, BoardService boardService)
+    public PostController(
+        PostService postService
+        , BoardService boardService
+        , CommentService commentService
+    )
     {
         this.postService = postService;
         this.boardService = boardService;
+        this.commentService = commentService;
     }
 
     @GetMapping("")
@@ -64,9 +71,12 @@ public class PostController {
             throw new Exception("post[%d] not exist in repo".formatted(id));
         }   
         
+        var comments = commentService.getCommentsUsingPost(post);
+
         model.addAttribute("board_id", board_id);
         model.addAttribute("board_name", board_name);
         model.addAttribute("post", post);
+        model.addAttribute("comments", comments);
         return "/posts/post";
     }
 
