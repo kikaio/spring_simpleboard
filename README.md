@@ -178,7 +178,6 @@ ADMIN을 제외하면 본인이 작성한 게시글에 대해서만 "삭제"를 
 =============================================
 각 Entity 설계
 . 모든 DateTime 은 UTC 기준으로 삽입 할 예정.
- -> 
  
 member : 회원 정보
  . id : Long
@@ -209,7 +208,7 @@ comment : 댓글
  . comment : String
  . cdate : LocalDateTime ? 
  . mdate : LocalDateTime ? 
- 
+  
 role : 역할
  . id : Long 
  . name : String

@@ -2,6 +2,7 @@ package com.example.simpleboard.dto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
 import org.springframework.stereotype.Component;
 
@@ -77,4 +78,49 @@ public class CommentDto {
     {
         childs.add(child);
     } 
+
+    public static ArrayList<CommentDto> calcCommentsChilds(List<Comment> entities)
+    {
+        var dtos = new ArrayList<CommentDto>();
+        TreeMap<Long, CommentDto> parentMap = new TreeMap<>();
+        TreeMap<Long, CommentDto> childMap = new TreeMap<>();
+
+        entities.forEach(ele->{
+            CommentDto dto = new CommentDto(ele); 
+            if(dto.getParentId() != null)
+            {
+                childMap.put(dto.getId(), dto);
+            }
+            else
+            {
+                parentMap.put(dto.getId(), dto);
+            }
+        });
+
+        childMap.forEach((key, dto)->{
+            Long parentId = dto.getParentId();
+            var parentComment = parentMap.get(parentId);
+            if(parentComment == null && parentMap.containsKey(parentId) == false)
+            {
+                CommentDto parent = new CommentDto(
+                    parentId
+                    , dto.getPostId()
+                    , null
+                    , null
+                    , true
+                    , false
+                    , new ArrayList<CommentDto>()
+                );
+                parentMap.put(parentId, null);
+                parentComment = parent;
+            }
+            parentComment.addChild(dto);
+        });
+
+        parentMap.forEach((key, dto)->{
+            dtos.add(dto);
+        });
+
+        return dtos;
+    }
 }

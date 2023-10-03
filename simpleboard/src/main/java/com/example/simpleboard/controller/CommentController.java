@@ -108,10 +108,9 @@ public class CommentController
             }
             parentComment.addChild(dto);
         });
-        var commentDtos = new ArrayList<CommentDto>();
-        parentMap.forEach((key, dto)->{
-            commentDtos.add(dto);
-        });
+        
+        var commentDtos = CommentDto.calcCommentsChilds(comments);
+
         model.addAttribute("comments", commentDtos);
         return "/comments/comments";
     }

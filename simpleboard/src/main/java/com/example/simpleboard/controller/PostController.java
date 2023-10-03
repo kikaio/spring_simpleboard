@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.example.simpleboard.dto.CommentDto;
 import com.example.simpleboard.dto.PostDto;
 import com.example.simpleboard.entity.Board;
 import com.example.simpleboard.entity.Post;
@@ -72,11 +73,12 @@ public class PostController {
         }   
         
         var comments = commentService.getCommentsUsingPost(post);
+        var commentDtos = CommentDto.calcCommentsChilds(comments);
 
         model.addAttribute("board_id", board_id);
         model.addAttribute("board_name", board_name);
         model.addAttribute("post", post);
-        model.addAttribute("comments", comments);
+        model.addAttribute("comments", commentDtos);
         return "/posts/post";
     }
 

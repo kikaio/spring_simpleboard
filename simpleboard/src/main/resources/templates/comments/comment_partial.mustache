@@ -1,20 +1,17 @@
 <div>
-    {{#is_deleted}}
+    {{#isDeleted}}
     <p>삭제된 댓글입니다.</p>
-    {{/is_deleted}}
-    {{^is_deleted}}
-    <label>id : {{id}}</label>
-    <label>post id : {{post_id}}</label>
-    <label>parent id : {{parent_id}}</label>
+    {{/isDeleted}}
+    {{^isDeleted}}
     {{#comment}}
-    {{#parent_id}}
-    <label>re to {{parent_id}}: {{comment}}</label>
-    {{/parent_id}}
-    {{^parent_id}}
-    <label> : {{comment}}</label>
-    {{/parent_id}}
+    {{#parentId}}
+    <label>re to {{parentId}}: {{comment}}</label>
+    {{/parentId}}
+    {{^parentId}}
+    <label>{{id}} : {{comment}}</label>
+    {{/parentId}}
     {{/comment}}
-    {{/is_deleted}}
+    {{/isDeleted}}
     {{#childs}}
     {{>comments/comment_partial}}
     {{/childs}}
