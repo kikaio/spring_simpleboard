@@ -1,19 +1,18 @@
 package com.example.simpleboard.service;
 
 import java.util.Collection;
-import java.util.stream.Collector;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.example.simpleboard.entity.Member;
+import com.example.simpleboard.entity.Role;
 import com.example.simpleboard.repository.MemberRepository;
 
 @Service
@@ -64,5 +63,69 @@ public class SimpleUserDetailsService implements UserDetailsService
             .collect(Collectors.toSet())
         ;
         return roleGrants;
+    }
+
+    public boolean createMember(String email, String  password)
+    {
+        Member member = Member.builder()
+            .email(email)
+            .password(password)
+            .expired(false)
+            .locked(false)
+            .enabled(true)
+            .build()
+        ;
+
+        try {
+            memberRepository.save(member);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean createMember(Member member)
+    {
+        try {
+            memberRepository.save(member);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public Member getMember(String email)
+    {
+        try {
+            return memberRepository.findByEmail(email).orElse(null);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public boolean updateOnlyMember(Member newMember)
+    {
+        try {
+            var origin = memberRepository.findById(newMember.getId()).orElseThrow(()->{
+                return new UsernameNotFoundException(
+                    "member[id:%d] not found in repo"
+                    .formatted(newMember.getId())
+                );
+            });
+            origin.updateOnlyMember(newMember);
+            memberRepository.save(origin);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean updateOnlyRoles(Member target, List<Role> newRoles)
+    {
+        try {
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

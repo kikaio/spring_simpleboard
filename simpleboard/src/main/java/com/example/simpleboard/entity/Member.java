@@ -2,10 +2,7 @@ package com.example.simpleboard.entity;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -98,12 +95,15 @@ public class Member implements UserDetails{
         return authorities;
     }
 
-    public void update(Member other)
+    public void updateOnlyMember(Member other)
     {
         if(other.password != null)
         {
             this.password = other.password;
         }
+        this.enabled = other.enabled;
+        this.expired = other.expired;
+        this.locked = other.locked;
     }
 
     @ManyToMany(
@@ -122,4 +122,5 @@ public class Member implements UserDetails{
         }
     )
     private final Set<Role> roles = new HashSet<>();
+
 }
