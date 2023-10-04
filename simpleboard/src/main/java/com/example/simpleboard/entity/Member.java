@@ -2,6 +2,7 @@ package com.example.simpleboard.entity;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -50,9 +51,25 @@ public class Member implements UserDetails{
     @Column
     private boolean enabled;
 
+    @ManyToMany(
+        fetch = FetchType.EAGER
+        , cascade = {
+            CascadeType.PERSIST, CascadeType.MERGE
+        }
+    )
+    @JoinTable(
+        name="member_role"
+        , joinColumns = {
+            @JoinColumn(referencedColumnName = "id", name="member_id")
+        }
+        , inverseJoinColumns = {
+            @JoinColumn(referencedColumnName = "id", name="role_id")
+        }
+    )
+    private final Set<Role> roles = new HashSet<>();
+
     @Transient
     private Collection<SimpleGrantedAuthority> authorities;
-
 
     public void setAuthoirties(Collection<SimpleGrantedAuthority> authorities)
     {
@@ -95,6 +112,37 @@ public class Member implements UserDetails{
         return authorities;
     }
 
+    @Override
+    public boolean equals(Object other)
+    {
+        if(other == this)
+        {
+            return true;
+        }
+        if(other == null)
+        {
+            return false;
+        }
+        if(other.getClass() != getClass())
+        {
+            return false;
+        }
+        //단순하게 email, password 일치 여부만 판별.
+        var mem = (Member)other;
+        if(mem.getEmail() != getEmail() || mem.getPassword() != getPassword())
+        {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return getEmail().hashCode();
+    }
+
+
     public void updateOnlyMember(Member other)
     {
         if(other.password != null)
@@ -105,22 +153,5 @@ public class Member implements UserDetails{
         this.expired = other.expired;
         this.locked = other.locked;
     }
-
-    @ManyToMany(
-        fetch = FetchType.EAGER
-        , cascade = {
-            CascadeType.PERSIST, CascadeType.MERGE
-        }
-    )
-    @JoinTable(
-        name="member_role"
-        , joinColumns = {
-            @JoinColumn(referencedColumnName = "id", name="member_id")
-        }
-        , inverseJoinColumns = {
-            @JoinColumn(referencedColumnName = "id", name="role_id")
-        }
-    )
-    private final Set<Role> roles = new HashSet<>();
 
 }

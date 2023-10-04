@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.simpleboard.dto.MemberDto;
@@ -58,8 +59,7 @@ public class MemberController
     public String createMemberPage()
     {
         //임의로 admin이 유저 정보 삽입 시 사용되는 API
-        //todo : authorization check 
-
+        //todo : authorization check (ROLE_ADMIN)
         return "/members/member_create";
     }
 
@@ -67,7 +67,7 @@ public class MemberController
     public String createMember(@ModelAttribute MemberDto dto)
     {
         //임의로 admin이 유저 정보 삽입 시 사용되는 API
-        //todo : authorization check 
+        //todo : authorization check (ROLE_ADMIN)
         var entity = dto.toEntity();
         //최초 권한은 아예 없는 걸로?
         if(simpleUserDetailsService.createMember(entity))
@@ -79,14 +79,31 @@ public class MemberController
     }
     
     @GetMapping("/update")
-    public String updateMemberPage()
+    public String updateMemberPage(@RequestParam(name = "id", required = true) long id, Model model)
     {
-        return "";
+        //todo : authorization check (ROLE_ADMIN 또는 자신에 대한 수정 요청)
+        //role에 대한 변경 등은 별도 API로 분리할 것.
+        var member = simpleUserDetailsService.getMember(id);
+        if(member == null)
+        {
+            //todo : error page로 보낼 것.
+            return "";
+        }
+        model.addAttribute("member", member);
+        return "/members/member_update";
     }
 
     @PostMapping("/update")
-    public String updateMember()
+    public String updateMember(@ModelAttribute MemberDto dto)
     {
+        //todo : authorization check (ROLE_ADMIN 또는 자신에 대한 수정 요청)
+        //현재까지는 password 변경정도?
+        var newMem = dto.toEntity();
+        if(simpleUserDetailsService.updateOnlyMember(newMem) == false)
+        {
+            //todo : error page 처리
+            return "";
+        }
         return "";
     }
 

@@ -60,7 +60,7 @@ public class Role {
             return true;
         if(other == null || other.getClass() != this.getClass())
             return false;
-        return Objects.equals(((Role)other).name, this.name)
+        return Objects.equals(((Role)other).name, this.name);
     }
 
     @Override

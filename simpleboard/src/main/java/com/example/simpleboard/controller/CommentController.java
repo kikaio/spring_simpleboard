@@ -1,8 +1,5 @@
 package com.example.simpleboard.controller;
 
-import java.util.ArrayList;
-import java.util.TreeMap;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -74,43 +71,7 @@ public class CommentController
     public String getAllComments(Model model)
     {
         var comments = commentService.getComments();
-        TreeMap<Long, CommentDto> parentMap = new TreeMap<>();
-        TreeMap<Long, CommentDto> childMap = new TreeMap<>();
-
-        comments.forEach(ele->{
-            CommentDto dto = new CommentDto(ele); 
-            if(dto.getParentId() != null)
-            {
-                childMap.put(dto.getId(), dto);
-            }
-            else
-            {
-                parentMap.put(dto.getId(), dto);
-            }
-        });
-
-        childMap.forEach((key, dto)->{
-            Long parentId = dto.getParentId();
-            var parentComment = parentMap.get(parentId);
-            if(parentComment == null && parentMap.containsKey(parentId) == false)
-            {
-                CommentDto parent = new CommentDto(
-                    parentId
-                    , dto.getPostId()
-                    , null
-                    , null
-                    , true
-                    , false
-                    , new ArrayList<CommentDto>()
-                );
-                parentMap.put(parentId, null);
-                parentComment = parent;
-            }
-            parentComment.addChild(dto);
-        });
-        
         var commentDtos = CommentDto.calcCommentsChilds(comments);
-
         model.addAttribute("comments", commentDtos);
         return "/comments/comments";
     }
