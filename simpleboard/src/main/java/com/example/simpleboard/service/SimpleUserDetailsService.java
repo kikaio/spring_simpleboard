@@ -1,5 +1,6 @@
 package com.example.simpleboard.service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -91,6 +92,24 @@ public class SimpleUserDetailsService implements UserDetailsService
             return true;
         } catch (Exception e) {
             return false;
+        }
+    }
+
+    public List<Member> getMembers()
+    {
+        try {
+            return memberRepository.findAll();
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+    }
+
+    public Member getMember(Long id)
+    {
+        try {
+            return memberRepository.findById(id).orElse(null);
+        } catch (Exception e) {
+            return null;
         }
     }
 

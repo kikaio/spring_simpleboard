@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>My Awesome Site</title>
+    </head>
+    <body>
+        <header>
+            <h1>Welcome to My Awesome Site</h1>
+        </header>
+        <div id="content">
+            <p>Hello, this is member list!</p>
+        </div>
+        <div>
+        <table>
+        <tr>
+            <th>id</th>
+            <th>email</th>
+            <th>password</th>
+        </tr>
+        <tbody>
+        {{#members}}
+        <tr>
+            <td><label>{{id}}</label></td>
+            <td><label>{{email}}</label></td>
+            <td><label>{{password}}</label></td>
+        <tr>
+        {{/members}}
+        <tbody>
+        </table>
+        </div>
+        <script>
+        </script>
+    </body>
+</html>
