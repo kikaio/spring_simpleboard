@@ -2,6 +2,7 @@ package com.example.simpleboard.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -139,12 +140,46 @@ public class SimpleUserDetailsService implements UserDetailsService
         }
     }
 
-    public boolean updateOnlyRoles(Member target, List<Role> newRoles)
+    public boolean updateOnlyRoles(Member target, HashSet<Role> newRoles)
     {
         try {
+            var member = memberRepository.findById(target.getId()).orElseThrow(()->{
+                return new UsernameNotFoundException("member id[%d] not exist ni repo".formatted());
+            });
+            member.updateOnlyRole(newRoles);
+            memberRepository.save(member);
             return true;
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public boolean deleteMember(Long id)
+    {
+        try {
+            memberRepository.deleteById(id);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }    
+
+    public boolean validCheckCreateMember(Member member)
+    {
+        if(member == null)
+        {
+            return false;
+        }
+        if(member.getPassword() == null || member.getPassword() == "")
+        {
+            return false;
+        }
+        //todo : email 형식 확인할 것.
+        if(member.getEmail() == null)
+        {
+            return false;
+        }
+
+        return true;
     }
 }

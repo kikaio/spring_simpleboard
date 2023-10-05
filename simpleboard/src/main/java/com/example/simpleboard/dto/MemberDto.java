@@ -25,6 +25,10 @@ public class MemberDto {
 
     private String password;
 
+    private boolean enabled = true;
+    private boolean expired = false;
+    private boolean locked = true; // todo : 추후 이메일 인증 로직 통과 후 false로 바꿀 예정.
+
     public MemberDto(Member entity)
     {
         fromEntity(entity);
@@ -38,6 +42,9 @@ public class MemberDto {
         id = entity.getId();
         email = entity.getEmail();
         password = entity.getPassword();
+        enabled = entity.isEnabled();
+        expired = entity.isExpired();
+        locked = entity.isLocked();
     }
 
     public Member toEntity()
@@ -46,6 +53,9 @@ public class MemberDto {
             .id(this.id)
             .email(this.email)
             .password(this.password)
+            .enabled(enabled)
+            .expired(expired)
+            .locked(locked)
             .build()
         ;
     }

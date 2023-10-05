@@ -7,23 +7,28 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>My Awesome Site</title>
     </head>
+    <body>
         <header>
-            <h1>Welcome to Member Create page</h1>
+            <h1>Welcome to member update page</h1>
         </header>
         <div id="content">
-        <form action="/members/create" method="POST">
-            <label>email : </label> <input name="email">
+        {{#member}}
+        <form action="/members/{{id}}", method = "POST">
+            <input type="hidden" value={{id}}>
+            <label>email : {{email}}</label>
+            <br>
             <label>password : </label> <input name="password">
-            <input type="submit" value="create!!">
+            <br>
             <label>is enabled? : </label> <input type="checkbox" {{#enabled}}checked{{/enabled}}>
             <br>
             <label>is expired? : </label> <input type="checkbox" {{#expired}}checked{{/expired}}>
             <br>
             <label>is locked? : </label> <input type="checkbox" {{#locked}}checked{{/locked}}>
             <br>
+            <input type="submit" value="do update!!">
         </form>
+        {{/member}}
         </div>
-        <script>
-        </script>
+        <script></script>
     </body>
 </html>

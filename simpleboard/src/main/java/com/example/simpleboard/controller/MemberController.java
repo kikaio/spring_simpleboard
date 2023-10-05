@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.simpleboard.dto.MemberDto;
+import com.example.simpleboard.entity.Member;
 import com.example.simpleboard.service.SimpleUserDetailsService;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +28,18 @@ public class MemberController
     public MemberController(SimpleUserDetailsService simpleUserDetailsService)
     {
         this.simpleUserDetailsService = simpleUserDetailsService;
+    }
+
+    @GetMapping("/test")
+    public String test()
+    {
+        Member admin = Member.builder()
+            .email("root")
+            .password("1234")
+            .build()
+        ;
+        simpleUserDetailsService.createMember(admin);
+        return "redirect:/members";
     }
 
     @GetMapping("")
@@ -70,7 +83,13 @@ public class MemberController
         //todo : authorization check (ROLE_ADMIN)
         var entity = dto.toEntity();
         //최초 권한은 아예 없는 걸로?
-        if(simpleUserDetailsService.createMember(entity))
+        //valid check
+        if(simpleUserDetailsService.validCheckCreateMember(entity) == false)
+        {
+            //todo : error page로 보낼 것.
+            return "";
+        }
+        if(simpleUserDetailsService.createMember(entity) == false)
         {
             //todo : error page로 보낼 것.
             return "";
@@ -89,27 +108,39 @@ public class MemberController
             //todo : error page로 보낼 것.
             return "";
         }
-        model.addAttribute("member", member);
+        var memberDto = new MemberDto(member);
+        model.addAttribute("member", memberDto);
         return "/members/member_update";
     }
 
-    @PostMapping("/update")
-    public String updateMember(@ModelAttribute MemberDto dto)
+    @PostMapping("/{id}")
+    public String updateMember(@PathVariable(name="id", required = true) long id, @ModelAttribute MemberDto dto)
     {
         //todo : authorization check (ROLE_ADMIN 또는 자신에 대한 수정 요청)
         //현재까지는 password 변경정도?
         var newMem = dto.toEntity();
+        if(newMem.getId() != id)
+        {
+            //todo : error page 처리
+            return "";
+        }
         if(simpleUserDetailsService.updateOnlyMember(newMem) == false)
         {
             //todo : error page 처리
             return "";
         }
-        return "";
+        return "redirect:/members/%d".formatted(id);
     }
 
     @DeleteMapping("/{id}")
-    public ModelAndView deleteMember()
+    public ModelAndView deleteMember(@PathVariable(name="id", required = true) long id)
     {
+        //todo : 본인 또는 ADMIN만 가능하도록 authorization check.
+        if(simpleUserDetailsService.deleteMember(id) == false)
+        {
+            //todo : error pgae 처리
+            return new ModelAndView("");
+        }
         //todo : delete member
         var retView = new ModelAndView("redirect:/members");
         retView.setStatus(HttpStatus.SEE_OTHER);

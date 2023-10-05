@@ -14,11 +14,18 @@
         <div id="content">
         {{#member}}
         <div>
-            <label>id : {{id}}</label>
-            <label>email : {{email}}</label>
-            <label>password : {{password}}</label>
+            <label>id : {{id}}</label><br/>
+            <label>email : {{email}}</label><br/>
+            <label>password : {{password}}</label><br/>
+            <label>is enabled? : </label> <input type="checkbox" {{#enabled}}checked{{/enabled}} disabled>
+            <br>
+            <label>is expired? : </label> <input type="checkbox" {{#expired}}checked{{/expired}} disabled>
+            <br>
+            <label>is locked? : </label> <input type="checkbox" {{#locked}}checked{{/locked}} disabled>
+            <br>
         </div>
         {{/member}}
+        <button type="button" onclick="location.href='/members'">go back to member list</button>
         </div>
         <script></script>
     </body>

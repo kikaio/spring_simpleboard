@@ -20,19 +20,39 @@
             <th>id</th>
             <th>email</th>
             <th>password</th>
+            <th>update</th>
+            <th>delete</th>
         </tr>
         <tbody>
         {{#members}}
         <tr>
             <td><label>{{id}}</label></td>
-            <td><label>{{email}}</label></td>
+            <td><a href="/members/{{id}}">{{email}}</a></td>
             <td><label>{{password}}</label></td>
+            <td><button type="button", onclick="location.href='/members/update?id={{id}}'">do it!</button></td>
+            <td><button type="button", onclick="doDelete({{id}})">do it!</button></td>
         <tr>
         {{/members}}
         <tbody>
         </table>
+        <div>
+            <button type="button" onclick="location.href='/members/create'">do create member!</button>
+        </div>
         </div>
         <script>
+        function doDelete(id)
+        {
+            var http = new XMLHttpRequest();
+            var url_to = window.location.origin + "/members/" + id;
+            http.open("DELETE", url_to);
+            http.addEventListener("readystatechange", function(){
+                if(http.readyState === 4 && http.status === 200)
+                {
+                    window.location.reload(true);
+                }
+            });
+            http.send();
+        }
         </script>
     </body>
 </html>

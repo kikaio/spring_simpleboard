@@ -2,9 +2,9 @@ package com.example.simpleboard.entity;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,30 +25,35 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
+@ToString
 public class Member implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(unique = true)
     private String email;
 
     @Column
     private String password;
 
     @Column
+    @ColumnDefault("false")
     private boolean expired;
 
     @Column
+    @ColumnDefault("false")
     private boolean locked;
 
     @Column
+    @ColumnDefault("true")
     private boolean enabled;
 
     @ManyToMany(
@@ -66,6 +71,7 @@ public class Member implements UserDetails{
             @JoinColumn(referencedColumnName = "id", name="role_id")
         }
     )
+    @ToString.Exclude
     private final Set<Role> roles = new HashSet<>();
 
     @Transient
@@ -142,7 +148,6 @@ public class Member implements UserDetails{
         return getEmail().hashCode();
     }
 
-
     public void updateOnlyMember(Member other)
     {
         if(other.password != null)
@@ -154,4 +159,9 @@ public class Member implements UserDetails{
         this.locked = other.locked;
     }
 
+    public void updateOnlyRole(HashSet<Role> roles)
+    {
+        this.roles.clear();
+        roles.forEach(role->this.roles.add(role));
+    }
 }
