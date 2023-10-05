@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>My Awesome Site</title>
+    </head>
+    <body>
+        <header>
+            <h1>Welcome to Role list page</h1>
+        </header>
+        <div id="content">
+            <p>Hello, World!</p>
+            <table>
+            <th>role name</th>
+            <th>desc</th>
+            {{#roles}}
+            <tr>
+            <td><label>test name</label></td>
+            <td><label>test desc</label></td>
+            </tr>
+            {{/roles}}
+            </table>
+        </div>
+        <div>
+        <button type="buttom" onclick="location.href='/roles/create'">create new role!</button>
+        </div>
+        <script>
+        </script>
+    </body>
+</html>
