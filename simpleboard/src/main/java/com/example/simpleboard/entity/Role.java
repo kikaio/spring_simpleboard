@@ -4,6 +4,9 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import org.hibernate.annotations.ColumnDefault;
+
+import jakarta.annotation.Nullable;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,8 +33,12 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column
     private String name;
+
+    @Column(nullable = false)
+    @ColumnDefault("")
+    private String desc;
 
     @ManyToMany(
         cascade = {
@@ -79,5 +86,29 @@ public class Role {
     {
         this.privileges.remove(privilege);
         privilege.getRoles().remove(this);
+    }
+
+    public void updateRole(Role other)
+    {
+        if(other == null)
+        {
+            return ;
+        }
+    
+        if(other.getName() != null)
+        {
+            this.name = other.getName();
+        }
+        if(other.getDesc() != null)
+        {
+            this.desc = other.getDesc();
+        }
+
+        if(other.getPrivileges() != null)
+        {
+            this.privileges.clear();
+            this.privileges.addAll(other.getPrivileges());
+        }
+            
     }
 }

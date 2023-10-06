@@ -14,9 +14,9 @@
         <div id="content">
             <p>Hello, World!</p>
             {{#role}}
-            <div>
-                <label>role name : {{name}}</label><br>
-                <label>role desc : {{desc}}</label>
+            <div id="role_div">
+                <label>role name : </label><input type="text" name="name" value="{{name}}"><br>
+                <label>role desc : </label><input type="text" name="desc" value="{{desc}}">
                 {{#privileges}}
                 <div>
                     <label>role name : {{name}}</label><br>
@@ -27,9 +27,30 @@
             {{/role}}
         </div>
         <div>
+        <button type="button" onclick="doUpdate({{role.id}})">do update!</button>
+        </div>
+        <div>
         <button type="button" onclick="location.href='/roles'">go back to role list</button>
         </div>
         <script>
+        function doUpdate(role_id)
+        {
+            var http = new XMLHttpRequest();
+            var url_to = window.location.origin + "/roles/" + role_id;
+            http.open("POST", url_to);
+            http.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+
+            var role_div = document.getElementById("role_div");
+            var role_name = document.getElementsByName('name')[0].value;
+            var role_desc = document.getElementsByName("desc")[0].value;
+            var requset_body = 
+                "name="+role_name
+                + "&"
+                + "desc="+role_desc
+            ;
+            console.log("send req body : "+requset_body);
+            http.send(requset_body);
+        }
         </script>
     </body>
 </html>

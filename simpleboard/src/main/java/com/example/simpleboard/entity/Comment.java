@@ -42,7 +42,7 @@ public class Comment
     private Post post;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "parent_id", referencedColumnName = "id", nullable = true)
+    @JoinColumn(name = "parent_id", referencedColumnName = "id", nullable = true, unique = false)
     @ToString.Exclude
     @OnDelete(action = OnDeleteAction.SET_NULL)
     private Comment parent;

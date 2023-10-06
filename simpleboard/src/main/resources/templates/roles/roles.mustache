@@ -16,10 +16,14 @@
             <table>
             <th>role name</th>
             <th>desc</th>
+            <th>update</th>
+            <th>delete</th>
             {{#roles}}
             <tr>
-            <td><label>test name</label></td>
-            <td><label>test desc</label></td>
+            <td><label><a href="/roles/{{id}}">{{name}}</label></td>
+            <td><label>{{desc}}</label></td>
+            <td><button type="button" onclick="location.href='/roles/update?id={{id}}'" >do it!</button></td>
+            <td><button type="button" onclick="onDelete({{id}})" >do it!</button></td>
             </tr>
             {{/roles}}
             </table>
@@ -28,6 +32,19 @@
         <button type="buttom" onclick="location.href='/roles/create'">create new role!</button>
         </div>
         <script>
+        function onDelete(id)
+        {
+            var http = new XMLHttpRequest(); 
+            var url_to = window.location.origin + "/roles/" + id;
+            http.open("DELETE", url_to);
+            http.addEventListener("readystatechange", function(){
+                if(http.readyState === 4 && http.status === 200)
+                {
+                    window.location.reload(true);
+                }
+            });
+            http.send();
+        }
         </script>
     </body>
 </html>
