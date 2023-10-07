@@ -53,4 +53,37 @@ public class Privilege {
     {
         return Objects.hash(this.name);
     }
+
+    public void updatePrivilege(Privilege other)
+    {
+        updateOnlyPrivilege(other);
+        updateOnlyRole(other);
+        return ;
+    }
+
+    public void updateOnlyPrivilege(Privilege other)
+    {
+        if(other == null)
+        {
+            return ;
+        }
+        if(other.getName() != null)
+        {
+            this.name = other.getName();
+        }
+        if(other.getDesc() != null)
+        {
+            this.desc = other.getDesc();
+        }
+    }
+
+    public void updateOnlyRole(Privilege other)
+    {
+        if(other == null)
+        {
+            return ;
+        }
+        this.roles.clear();
+        this.roles.addAll(other.getRoles());
+    }
 }
