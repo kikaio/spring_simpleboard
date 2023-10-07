@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,11 +27,16 @@ public class Privilege {
     @GeneratedValue
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
+    @ColumnDefault("")
     private String name;
 
     @ManyToMany(mappedBy = "privileges")
     private final Set<Role> roles = new HashSet<>();
+
+    @Column(nullable = false)
+    @ColumnDefault("")
+    private String desc;
 
     @Override
     public boolean equals(Object other)
