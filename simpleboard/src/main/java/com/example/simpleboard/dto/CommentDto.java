@@ -74,7 +74,7 @@ public class CommentDto {
         ;
     }
 
-    public void addChild(CommentDto child)
+    private void addChild(CommentDto child)
     {
         childs.add(child);
     } 

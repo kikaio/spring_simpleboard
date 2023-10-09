@@ -1,5 +1,7 @@
 package com.example.simpleboard.controller;
 
+import java.net.http.HttpRequest;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -7,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.simpleboard.dto.CommentDto;
 import com.example.simpleboard.entity.Board;
@@ -16,6 +19,9 @@ import com.example.simpleboard.service.BoardService;
 import com.example.simpleboard.service.CommentService;
 import com.example.simpleboard.service.PostService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Controller
 @RequestMapping("/comments")
 public class CommentController 
@@ -79,11 +85,12 @@ public class CommentController
     //현재 Post에 속한 comment는 PostController에서 Get 하고 있는 상태.
 
     @PostMapping("/create")
-    public String createComment(CommentDto commentDto, Model model)
+    public String createComment(CommentDto commentDto, Model model, RedirectAttributes reAttr)
     {
         if(commentDto.getPostId() == null)
         {
             //todo : invalid case
+            return "";
         }
         Post post = postService.getPost(commentDto.getPostId());
         if(post == null)
@@ -92,6 +99,7 @@ public class CommentController
             return "";
         }
         Long post_id = commentDto.getPostId();
+        Long board_id = post.getBoard().getId();
         Comment parentComment = null;
 
         if(commentDto.getParentId() != null)
@@ -104,21 +112,58 @@ public class CommentController
         }
 
         var comment = commentDto.toEntity(post, parentComment);
-        boolean success = commentService.createComment(comment);
-        if(success == false)
+        if(commentService.createComment(comment) == false)
         {
             //todo : send to error page
             return "";
         }
+        log.info("redirect:/posts/%d".formatted(post_id));
+        reAttr.addAttribute("board_id", board_id);
         //todo : 해당 post로 다시 redirect
         return "redirect:/posts/%d".formatted(post_id);
     }
 
     @PostMapping("/{id}")
-    public String updateComment(CommentDto commentDto)
+    public String updateComment(CommentDto commentDto, RedirectAttributes reAddr)
     {
         //갱신 시 post, 부모 comment에 대한 정보는 변경할 수 없다.
-        return "";
+        Long comment_id = commentDto.getId();
+
+        //comment의 경우 변경되는 data는 comment str만 한다고 가정한다.
+        var comment = commentService.getComment(comment_id);
+        if(comment == null)
+        {
+            //todo : error page
+            return "";
+        }
+        Long parent_id = comment.getParentRefId();
+        var post = comment.getPost();
+        Long post_id = post.getId();
+        Long board_id = post.getBoard().getId();
+
+        if(commentDto.getParentId() != parent_id)
+        {
+            //todo : error page
+            return "";
+        }
+        if(commentDto.getPostId() != post_id)
+        {
+            //todo : error page
+            return "";
+        }
+
+        if(false)
+        {
+            //todo : author or admin check 
+            return "";
+        }
+
+        var parentComment = commentService.getComment(parent_id);
+        var newComment = commentDto.toEntity(post, parentComment);
+        commentService.updateComment(newComment);
+
+        reAddr.addAttribute("board_id", board_id);
+        return "redirect:/posts/%d".formatted(post_id);
     }
 
     @DeleteMapping("/{id}")

@@ -4,12 +4,20 @@
     {{/isDeleted}}
     {{^isDeleted}}
     {{#comment}}
-    {{#parentId}}
-    <label>re to {{parentId}}: {{comment}}</label>
-    {{/parentId}}
-    {{^parentId}}
-    <label>{{id}} : {{comment}}</label>
-    {{/parentId}}
+        {{#parentId}}
+        <label>re to {{parentId}}: {{comment}}</label>
+        {{/parentId}}
+        {{^parentId}}
+        <label>{{id}} : {{comment}}</label>
+        <button type="text" onclick="doDeleteComment({{id}})">delete</button>
+        <button type="text" onclick="clickEditCommentBtn({{id}})">edit</button>
+        <div style="border:3px solid">
+            <input type="hidden" name="hidden_comment_post_id_{{id}}" value={{postId}}>
+            <input type="hidden" name="hidden_comment_parent_id_{{id}}" value={{parentId}}>
+            <label>new comment : </label><input type="text" name="new_comment_{{id}}"><br>
+            <button type="button" onclick="doEditComment({{id}})">apply</button>
+        </div>
+        {{/parentId}}
     {{/comment}}
     {{/isDeleted}}
     {{#childs}}

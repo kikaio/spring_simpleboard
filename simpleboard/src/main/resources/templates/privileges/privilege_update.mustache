@@ -17,15 +17,13 @@
             <form action="/privileges/{{id}}" method = "POST">
                 <input type="hidden" value={{id}} name="id">
                 <label>privilege name : </label><input type="text" name="name" value="{{name}}"><br>
-                <label>privilege desc : </label><input type="text" name="desc" value="{{desc}}">
+                <label>privilege desc : </label><input type="text" name="desc" value="{{desc}}"><br>
+                <input type="submit" value="do update!">
             </form>
             {{/privilege}}
         </div>
         <div>
-        <button type="button" onclick="doUpdate({{privilege.id}})">do update!</button>
-        </div>
-        <div>
-        <button type="button" onclick="location.href='/privileges'">go back to privilege list</button>
+            <button type="button" onclick="location.href='/privileges'">go back to privilege list</button>
         </div>
         <script>
         </script>

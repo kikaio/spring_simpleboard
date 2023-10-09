@@ -16,25 +16,26 @@
             <p>Hello, cur board is {{board.name}}!</p>
             <div>
             <table>
-            <thead>
-                <td>post id</td>
-                <td>post title</td>
-                <td></td>
-                <td></td>
-            </thead>
+            <tr>
+                <th>post id</th>
+                <th>post title</th>
+                <th>update</th>
+                <th>delete</th>
+            </tr>
             {{#posts}}
             <tr>
                 <td>{{id}}</td>
                 <td><a href="/posts/{{id}}?board_id={{board.id}}">{{title}}</a></td>
-                <td><button type="button" onclick="location.href='/posts/update?id={{id}}'">update</button></td>
-                <td><button type="button" onclick="doPostDelete({{id}})">delete</button></td>
+                <td><button type="button" onclick="location.href='/posts/update?id={{id}}'">do it!</button></td>
+                <td><button type="button" onclick="doPostDelete({{id}})">do it!</button></td>
             </tr>
             {{/posts}}
             </table>
             </div>
             <div>
-            <button type="button" onclick="location.href='/boards'">go to board list</button>
-            <button type="button" onclick="location.href='/posts/create?board_id={{board.id}}&board_name={{board.name}}'">create post on this board</button>
+                <button type="button" onclick="location.href='/posts/create?board_id={{board.id}}&board_name={{board.name}}'">create post on this board</button>
+                <br>
+                <button type="button" onclick="location.href='/boards'">go to board list</button>
             </div>
         </div>
         <script>

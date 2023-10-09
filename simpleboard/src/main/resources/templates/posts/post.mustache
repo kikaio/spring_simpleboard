@@ -25,10 +25,18 @@
         {{#comments}}
             {{>comments/comment_partial}}
         {{/comments}}
+        <div style="border:3px solid">
+            <form action = "/comments/create", method = "POST">
+                <input type="hidden" name="postId" value={{post.id}}>
+                <label>comment : </label><input type="text" name="comment"><br>
+                <input type="submit" value="add comment to this post!">
+            </form>
+        </div>
+        {{/post}}
         <div>
             <button type="button" onclick="location.href='/boards/{{board_id}}'">go back to board</button>
         </div>
-        {{/post}}
-        <script></script>
+        <script src="/js/simple_script.js">
+        </script>
     </body>
 </html>
