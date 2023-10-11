@@ -1,18 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>My Awesome Site</title>
-    </head>
+    {{>partials/head_partial}}
     <body>
-        <header>
-            <h1>Welcome to Role update page</h1>
-        </header>
+        {{>partial/header_partial}}
         <div id="content">
-            <p>Hello, World!</p>
+            <p>Hello, World!, Welcome to Role update page</p>
             {{#role}}
             <div id="role_div">
                 <label>role name : </label><input type="text" name="name" value="{{name}}"><br>
@@ -53,4 +46,5 @@
         }
         </script>
     </body>
+    {{>partials/footer_partial}}
 </html>

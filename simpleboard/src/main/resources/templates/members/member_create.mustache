@@ -1,15 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>My Awesome Site</title>
-    </head>
-        <header>
-            <h1>Welcome to Member Create page</h1>
-        </header>
+    {{>partials/head_partial}}
+    <body>
+        {{>partial/header_partial}}
+        <p>Welcome to Member Create page</p>
         <div id="content">
         <form action="/members/create" method="POST">
             <label>email : </label> <input name="email">
@@ -26,4 +21,5 @@
         <script>
         </script>
     </body>
+    {{>partials/footer_partial}}
 </html>

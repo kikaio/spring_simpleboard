@@ -1,18 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>My Awesome Site</title>
-    </head>
+    {{>partials/head_partial}}
     <body>
-        <header>
-            <h1>Welcome to Privilege list page</h1>
-        </header>
+        {{>partial/header_partial}}
         <div id="content">
-            <p>Hello, World!</p>
+            <p>Welcome to Privilege list page</p>
             <form action="/privileges/create" method="POST">
                 <label>privilege name : </label><input type="text" name="name"><br>
                 <label>privilege desc : </label><input type="text" name="desc"><br>
@@ -22,4 +15,5 @@
         <script>
         </script>
     </body>
+    {{>partials/footer_partial}}
 </html>
