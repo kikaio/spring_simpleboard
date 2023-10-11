@@ -1,7 +1,6 @@
 package com.example.simpleboard.controller;
 
-import java.net.http.HttpRequest;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -9,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.simpleboard.dto.CommentDto;
@@ -158,8 +159,7 @@ public class CommentController
             return "";
         }
 
-        var parentComment = commentService.getComment(parent_id);
-        var newComment = commentDto.toEntity(post, parentComment);
+        var newComment = commentDto.toEntity(post, comment.getParent());
         commentService.updateComment(newComment);
 
         reAddr.addAttribute("board_id", board_id);
@@ -167,8 +167,38 @@ public class CommentController
     }
 
     @DeleteMapping("/{id}")
-    public String deleteComment(@PathVariable(required = true) long id)
+    public ModelAndView deleteComment(
+        @PathVariable(name = "id", required = true) long id
+        , @RequestParam(name = "board_id", required = true) Long board_id
+        , @RequestParam(name = "post_id", required = true) Long post_id
+        , RedirectAttributes reAttr
+    )
     {
-        return "";
+        var comment = commentService.getComment(id);
+        if(comment == null)
+        {
+            //todo: error page, already deleted commment
+            reAttr.addAttribute("board_id", board_id);
+            var ret = new ModelAndView("redirect:/posts/%d".formatted(post_id), HttpStatus.SEE_OTHER);
+            return ret;
+        }
+        var post = comment.getPost();
+        if(post == null)
+        {
+            //laready post deleted, just delete comment and redirect to board detail page
+            commentService.deleteComment(id);
+            var ret = new ModelAndView("redirect:/boards/%d".formatted(board_id), HttpStatus.SEE_OTHER);
+            return ret;
+            
+        }
+        if(commentService.deleteComment(id) == false)
+        {
+            //todo : error page
+            return new ModelAndView("");
+        }
+
+        reAttr.addAttribute("board_id", board_id);
+        var ret = new ModelAndView("redirect:/posts/%d".formatted(post_id), HttpStatus.SEE_OTHER);
+        return ret;
     }
 }

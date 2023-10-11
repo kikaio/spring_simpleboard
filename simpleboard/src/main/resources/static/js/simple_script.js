@@ -1,43 +1,40 @@
-function doDeleteComment(comment_id)
+function doDeleteComment(board_id, post_id, comment_id)
 {
     var http = new XMLHttpRequest();
     var url_to = window.location.origin + "/comments/"+comment_id;
     http.open("DELETE", url_to);
+    http.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+    var http_body = ""
+        + "board_id=" + board_id + "&"
+        + "post_id=" + post_id
+    ;
     http.addEventListener("readystatechange", function(){
         if(http.readyState === 4 && http.status === 200)
         {
             window.location.reload(true);
         }
     });
-    http.send();
+    http.send(http_body);
+
+    console.log("send http body : " + http_body);
+};
+
+function cancleEditCommentBtn(comment_id)
+{
+    var targetName = "comment_edit_div_"+comment_id;
+    console.log("cancleEditCommentBtn : target - "+targetName);
+
+    var comment_edit_div = document.getElementsByName(targetName)[0];
+    comment_edit_div.style.display = 'none';
+    return ;
 };
 
 function clickEditCommentBtn(comment_id)
 {
-    //todo : 특정 div를 click 여부 인식 후 노출 하도록.
+    var targetName = "comment_edit_div_"+comment_id;
+    console.log("clickEditCommentBtn : target - " + targetName );
+
+    var comment_edit_div = document.getElementsByName(targetName)[0];
+    comment_edit_div.style.display = 'block';
     return ;
-}
-
-function doEditComment(comment_id)
-{
-    var http = new XMLHttpRequest();
-    var url_to = window.location.origin + "/comments/" + comment_id;
-    
-    var comment_str = document.getElementsByName("new_comment_"+comment_id)[0].nodeValue;
-    console.log("new comment : "+ comment_str);
-    http.open("POST", url_to);
-    http.setRequestHeader("content-type", "application/x-www-form-urlencoded");
-
-    var post_id = document.getElementsByName("hidden_comment_post_id_" + comment_id)[0].value;
-    var parent_id = document.getElementsByName("hidden_comment_parent_id_" + comment_id)[0].value;
-
-    var request_body = 
-        "id=" + comment_id
-        + "&" + "postId=" + post_id
-        + "&" + "parentId=" + parent_id
-        + "&" + "comment=" + comment_str
-    ;
-    
-    http.send(request_body);
-    return ;
-}
+};

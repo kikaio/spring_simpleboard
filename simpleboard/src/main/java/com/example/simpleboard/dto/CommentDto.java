@@ -25,12 +25,14 @@ import lombok.ToString;
 public class CommentDto {
     
     private Long id;
+    private Long boardId;
     private Long postId;
     private Long parentId;
 
     private String comment;
     private boolean isDeleted = false;
     private boolean isParentLive = false;
+
 
     private List<CommentDto> childs = new ArrayList<>();
 
@@ -45,13 +47,17 @@ public class CommentDto {
         if(comment.getPost() != null)
         {
             this.postId = comment.getPost().getId();
+            this.boardId = comment.getPost().getBoard().getId();
         }
         else 
         {
             this.postId = null;
+            this.boardId = null;
         }
+
         this.comment = comment.getComment();
         this.parentId = comment.getParentRefId();
+
         if(this.parentId != null)
         {
             this.isParentLive = comment.getParent() == null? false : true;
@@ -104,6 +110,7 @@ public class CommentDto {
             {
                 CommentDto parent = new CommentDto(
                     parentId
+                    , dto.getBoardId()
                     , dto.getPostId()
                     , null
                     , null
