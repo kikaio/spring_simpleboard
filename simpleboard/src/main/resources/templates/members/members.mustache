@@ -3,34 +3,44 @@
 <html>
     {{>partials/head_partial}}
     <body>
-        {{>partial/header_partial}}
-        <div id="content">
-            <p>Hello, this is member list!</p>
-        </div>
-        <div>
-        <table>
-        <tr>
-            <th>id</th>
-            <th>email</th>
-            <th>password</th>
-            <th>update</th>
-            <th>delete</th>
-        </tr>
-        <tbody>
-        {{#members}}
-        <tr>
-            <td><label>{{id}}</label></td>
-            <td><a href="/members/{{id}}">{{email}}</a></td>
-            <td><label>{{password}}</label></td>
-            <td><button type="button", onclick="location.href='/members/update?id={{id}}'">do it!</button></td>
-            <td><button type="button", onclick="doDelete({{id}})">do it!</button></td>
-        <tr>
-        {{/members}}
-        <tbody>
-        </table>
-        <div>
-            <button type="button" onclick="location.href='/members/create'">do create member!</button>
-        </div>
+        {{>partials/header_partial}}
+        <div class="container-fluid">
+            <div>
+                <p>
+                    현재 유저 목록입니다.
+                    임의로 유저 추가를 할 수 있습니다.
+                </p>
+            </div>
+            <div class="container-fluid">
+                <button class="btn btn-primary" type="button" onclick="location.href='/members/create'">유저 생성하러 가기</button>
+            </div>
+            <br>
+            <div class="container-fluid">
+                <table class="table table-striped table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>email</th>
+                            <th>password</th>
+                            <th>member detail</th>
+                            <th>member update</th>
+                            <th>member delete</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                    {{#members}}
+                    <tr>
+                        <th><label>{{id}}</label></th>
+                        <td>{{email}}</td>
+                        <td><label>{{password}}</label></td>
+                        <td><button class="btn btn-info" type="button", onclick="location.href='/members/{{id}}'">do it!</button></td>
+                        <td><button class="btn btn-warning" type="button", onclick="location.href='/members/update?id={{id}}'">do it!</button></td>
+                        <td><button class="btn btn-danger" type="button", onclick="doDelete({{id}})">do it!</button></td>
+                    <tr>
+                    {{/members}}
+                    <tbody>
+                </table>
+            </div>
         </div>
         <script>
         function doDelete(id)

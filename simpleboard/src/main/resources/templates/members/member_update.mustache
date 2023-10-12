@@ -3,23 +3,45 @@
 <html>
     {{>partials/head_partial}}
     <body>
-        {{>partial/header_partial}}
+        {{>partials/header_partial}}
         <p>Welcome to member update page</p>
-        <div id="content">
+        <div id="content" class = "container-fluid">
+            <p>유저 정보 갱신 page 입니다.</p>
+        </div>
+        <div id="content" class = "container-fluid">
         {{#member}}
-        <form action="/members/{{id}}", method = "POST">
-            <input type="hidden" value={{id}}>
-            <label>email : {{email}}</label>
-            <br>
-            <label>password : </label> <input name="password">
-            <br>
-            <label>is enabled? : </label> <input type="checkbox" {{#enabled}}checked{{/enabled}}>
-            <br>
-            <label>is expired? : </label> <input type="checkbox" {{#expired}}checked{{/expired}}>
-            <br>
-            <label>is locked? : </label> <input type="checkbox" {{#locked}}checked{{/locked}}>
-            <br>
-            <input type="submit" value="do update!!">
+        <form action="/members/{{id}}" method="POST">
+            <input type="hidden" value="{{id}}" readonly>
+            <div class="md-3">
+                <label class="form-label">email</label> 
+                <input type="email" class="form-control" placeholder="{{email}}" name="email" readonly>
+            </div>
+            <div class = "md-3">
+                <label class="col-sm-2 col-form-label">password</label>
+                <input type="text" class="form-control" name="password" value="{{password}}">
+            </div>
+            <div>
+                <div class="form-check form-check-inline form-check-reverse">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        set user enabled?
+                    </label>
+                    <input class="form-check-input" type="checkbox" name="enabled" id="flexCheckDefault" {{#enabled}}checked{{/enabled}}>
+                </div>
+                <div class="form-check form-check-inline  form-check-reverse">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        set user expired?
+                    </label>
+                    <input class="form-check-input" type="checkbox" name="expired" id="flexCheckDefault" {{#expired}}checked{{/expired}}>
+                </div>
+                <div class="form-check form-check-inline  form-check-reverse">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        set user locked?
+                    </label>
+                    <input class="form-check-input" type="checkbox" name="locked" id="flexCheckDefault" {{#locked}}checked{{/locked}}>
+                </div>
+            </div>
+            <button class="btn btn-info" type="submit">update</button>
+            <button class="btn btn-secondary" type="button" onclick="location.href='/members'">back to member list</button>
         </form>
         {{/member}}
         </div>

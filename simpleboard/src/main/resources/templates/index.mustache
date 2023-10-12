@@ -2,50 +2,14 @@
 <html lang="en">
     {{>partials/head_partial}}
     <body>
-        {{>partial/header_partial}}
+        {{>partials/header_partial}}
         <div id="content">
-            <p>Hello, World!</p>
-            {{#username}}
-            <p>your name is {{username}}!, right?</p>
-            {{/username}}
-            <img src="/images/index_icon.jpg" alt="img not exist"/>
-            {{^username}}
-            <div>
-                <button type="button" onclick="location.href='/member/sign-in'">go to sign in</button>
-                <button type="button" onclick="location.href='/member/sign-up'">go to sign up</button>
-            </div>
-            {{/username}}
-            {{#username}}
-            <div>
-                <button name="sign_out_btn" type="button" onclick="onSignOutClicked()">go to sign out</button>
-            </div>
-            {{/username}}
-            <div>
-                <button type="button" onclick="location.href='/boards'">check board list</button><br>
-                <button type="button" onclick="location.href='/member/list'">check member list</button><br>
-                <button type="button" onclick="location.href='/posts'">check post list</button><br>
-                <button type="button" onclick="location.href='/comments'">check comment list</button><br>
-                <button type="button" onclick="location.href='/roles'">check role list</button><br>
-                <button type="button" onclick="location.href='/privileges'">check privilege list</button><br>
-            </div>
-            <div>
-                <button type="button" onclick="location.href='/status'">check status</button>
-            </div>
-            <div>
-                <button type="button" onclick="location.href='/test-authentication'">do test for authentication</button>
-                <button type="button" onclick="location.href='/test-authorization'">do test for authorization</button>
+            <div class = "container-fluid">
+                <p>서비스 소개 : 간단한 Blog 기능을 구현한 프로젝트입니다.!</p>
             </div>
         </div>
     </body>
     <script>
-        function onSignOutClicked()
-        {
-            var form = document.createElement("form");
-            form.action = "/member/sign-out";
-            form.method = "POST";
-            document.body.appendChild(form);
-            form.submit();
-        };
     </script>
     {{>partials/footer_partial}}
 </html>
