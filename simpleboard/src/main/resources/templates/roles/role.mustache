@@ -4,23 +4,38 @@
     {{>partials/head_partial}}
     <body>
         {{>partials/header_partial}}
-        <div id="content">
-            <p>Hello, World!, Welcome to Role detail page</p>
-            {{#role}}
-            <div>
-                <label>role name : {{name}}</label><br>
-                <label>role desc : {{desc}}</label>
-                {{#privileges}}
-                <div>
-                    <label>role name : {{name}}</label><br>
-                    <label>role desc : {{desc}}</label>
-                </div>
-                {{/privileges}}
+        <div id="content" class = "container-fluid">
+            <div class = "container-fluid">
+                <p>역할 정보 page 입니다.</p>
             </div>
-            {{/role}}
-        </div>
-        <div>
-        <button type="button" onclick="location.href='/roles'">go back to role list</button>
+            <form>
+                <div class = "container-fluid">
+                {{#role}}
+                    <div class="md-3">
+                        <label class="form-label">role name</label> 
+                        <input type="text" class="form-control" placeholder="etc : admin" name="name" readonly value="{{name}}">
+                    </div>
+                    <div class="md-3">
+                        <label class="form-label">role desc</label> 
+                        <input type="text" class="form-control" placeholder="etc : authorization desc for admin" name="desc" readonly value={{desc}}>
+                    </div>
+                    {{#privileges}}
+                        <div class="md-3">
+                            <label class="form-label">privilege name</label> 
+                            <input type="text" class="form-control" placeholder="etc : privilege set for admin" name="privilege_name" readonly value={{name}}>
+                        </div>
+                        <div class="md-3">
+                            <label class="form-label">privilege desc</label> 
+                            <input type="text" class="form-control" placeholder="etc : privilege set for admin" name="privilege_desc" readonly value={{desc}}>
+                        </div>
+                    {{/privileges}}
+                {{/role}}
+                </div>
+            </form>
+            <div class = "container-fluid">
+                <br>
+                <button class="btn btn-info" type="button" onclick="location.href='/roles'">back to role list</button>
+            </div>
         </div>
         <script>
         </script>

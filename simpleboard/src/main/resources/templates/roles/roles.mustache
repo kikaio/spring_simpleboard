@@ -4,25 +4,41 @@
     {{>partials/head_partial}}
     <body>
         {{>partials/header_partial}}
-        <div id="content">
-            <p>Hello, World!, Welcome to Role list page</p>
-            <table>
-            <th>role name</th>
-            <th>desc</th>
-            <th>update</th>
-            <th>delete</th>
-            {{#roles}}
-            <tr>
-            <td><label><a href="/roles/{{id}}">{{name}}</label></td>
-            <td><label>{{desc}}</label></td>
-            <td><button type="button" onclick="location.href='/roles/update?id={{id}}'" >do it!</button></td>
-            <td><button type="button" onclick="onDelete({{id}})" >do it!</button></td>
-            </tr>
-            {{/roles}}
-            </table>
-        </div>
-        <div>
-        <button type="buttom" onclick="location.href='/roles/create'">create new role!</button>
+        <div id="content" class="container-fluid">
+            <div>
+                <p>
+                    현재 역할 목록입니다.
+                    역할을 관리할 수 있습니다.
+                </p>
+            </div>
+            <div class="container-fluid">
+                <button class="btn btn-primary" type="button" onclick="location.href='/roles/create'">역할 생성하러 가기</button>
+            </div>
+            <br>
+            <div class="container-fluid">
+                <table class="table table-striped table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th>role name</th>
+                            <th>role desc</th>
+                            <th>role detail</th>
+                            <th>role update</th>
+                            <th>role delete</th>
+                        </tr>
+                    <thead>
+                    <tbody>
+                        {{#roles}}
+                            <tr>
+                                <td><label>{{name}}</label></td>
+                                <td><label>{{desc}}</label></td>
+                                <td><button class="btn btn-info" type="button" onclick="location.href='/roles/{{id}}'" >do it!</button></td>
+                                <td><button class="btn btn-warning" type="button" onclick="location.href='/roles/update?id={{id}}'" >do it!</button></td>
+                                <td><button class="btn btn-danger" type="button" onclick="onDelete({{id}})" >do it!</button></td>
+                            </tr>
+                        {{/roles}}
+                    </tbody>
+                </table>
+            </div>
         </div>
         <script>
         function onDelete(id)

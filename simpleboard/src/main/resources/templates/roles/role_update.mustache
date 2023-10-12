@@ -4,46 +4,60 @@
     {{>partials/head_partial}}
     <body>
         {{>partials/header_partial}}
-        <div id="content">
-            <p>Hello, World!, Welcome to Role update page</p>
-            {{#role}}
-            <div id="role_div">
-                <label>role name : </label><input type="text" name="name" value="{{name}}"><br>
-                <label>role desc : </label><input type="text" name="desc" value="{{desc}}">
-                {{#privileges}}
-                <div>
-                    <label>role name : {{name}}</label><br>
-                    <label>role desc : {{desc}}</label>
-                </div>
-                {{/privileges}}
+        <div id="content" class = "container-fluid">
+            <div class = "container-fluid">
+                <p>역할 정보 갱신 page 입니다.</p>
             </div>
-            {{/role}}
+            <form>
+                <div class = "container-fluid">
+                {{#role}}
+                    <div class="md-3">
+                        <label class="form-label">role name</label> 
+                        <input type="text" class="form-control" placeholder="etc : admin" name="name" value={{name}}>
+                    </div>
+                    <div class="md-3">
+                        <label class="form-label">role desc</label> 
+                        <input type="text" class="form-control" placeholder="etc : authorization set for admin" name="desc" value={{desc}}>
+                    </div>
+                    {{#privileges}}
+                        <div class="md-3">
+                            <label class="form-label">privilege name</label> 
+                            <input type="text" class="form-control" placeholder="etc : privilege set for admin" name="privilege_name_{{id}}" readonly value={{name}}>
+                        </div>
+                        <div class="md-3">
+                            <label class="form-label">privilege desc</label> 
+                            <input type="text" class="form-control" placeholder="etc : privilege set for admin" name="privilege_desc_{{id}}" readonly value={{desc}}>
+                        </div>
+                    {{/privileges}}
+                {{/role}}
+                </div>
+            </form>
         </div>
-        <div>
-        <button type="button" onclick="doUpdate({{role.id}})">do update!</button>
+        <br>
+        <div class = "container-fluid">
+            <button class="btn btn-info" type="button" onclick="doUpdate({{role.id}})">role update!</button>
+            <button class="btn btn-info" type="button" onclick="location.href='/roles'">back to role list</button>
         </div>
-        <div>
-        <button type="button" onclick="location.href='/roles'">go back to role list</button>
-        </div>
-        <script>
-        function doUpdate(role_id)
-        {
-            var http = new XMLHttpRequest();
-            var url_to = window.location.origin + "/roles/" + role_id;
-            http.open("POST", url_to);
-            http.setRequestHeader("content-type", "application/x-www-form-urlencoded");
 
-            var role_div = document.getElementById("role_div");
-            var role_name = document.getElementsByName('name')[0].value;
-            var role_desc = document.getElementsByName("desc")[0].value;
-            var requset_body = 
-                "name="+role_name
-                + "&"
-                + "desc="+role_desc
-            ;
-            console.log("send req body : "+requset_body);
-            http.send(requset_body);
-        }
+        <script>
+            function doUpdate(role_id)
+            {
+                var http = new XMLHttpRequest();
+                var url_to = window.location.origin + "/roles/" + role_id;
+                http.open("POST", url_to);
+                http.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+
+                var role_div = document.getElementById("role_div");
+                var role_name = document.getElementsByName('name')[0].value;
+                var role_desc = document.getElementsByName("desc")[0].value;
+                var requset_body = 
+                    "name="+role_name
+                    + "&"
+                    + "desc="+role_desc
+                ;
+                console.log("send req body : "+requset_body);
+                http.send(requset_body);
+            };
         </script>
     </body>
     {{>partials/footer_partial}}
