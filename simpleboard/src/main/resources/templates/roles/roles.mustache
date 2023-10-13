@@ -28,13 +28,13 @@
                     <thead>
                     <tbody>
                         {{#roles}}
-                            <tr>
-                                <td><label>{{name}}</label></td>
-                                <td><label>{{desc}}</label></td>
-                                <td><button class="btn btn-info" type="button" onclick="location.href='/roles/{{id}}'" >do it!</button></td>
-                                <td><button class="btn btn-warning" type="button" onclick="location.href='/roles/update?id={{id}}'" >do it!</button></td>
-                                <td><button class="btn btn-danger" type="button" onclick="onDelete({{id}})" >do it!</button></td>
-                            </tr>
+                        <tr>
+                            <td><label>{{name}}</label></td>
+                            <td><label>{{desc}}</label></td>
+                            <td><button class="btn btn-info" type="button" onclick="location.href='/roles/{{id}}'" >do it!</button></td>
+                            <td><button class="btn btn-warning" type="button" onclick="location.href='/roles/update?id={{id}}'" >do it!</button></td>
+                            <td><button class="btn btn-danger" type="button" onclick="onDelete({{id}})" >do it!</button></td>
+                        </tr>
                         {{/roles}}
                     </tbody>
                 </table>

@@ -14,20 +14,20 @@
                     <input type="hidden" value={{id}} name="role_id">
                     <div class="md-3">
                         <label class="form-label">role name</label> 
-                        <input type="text" class="form-control" placeholder="etc : admin" name="name" value={{name}}>
+                        <input type="text" class="form-control" placeholder="ex : admin" name="name" value={{name}}>
                     </div>
                     <div class="md-3">
                         <label class="form-label">role desc</label> 
-                        <input type="text" class="form-control" placeholder="etc : authorization set for admin" name="desc" value={{desc}}>
+                        <input type="text" class="form-control" placeholder="ex : authorization set for admin" name="desc" value={{desc}}>
                     </div>
                     {{#privileges}}
                         <div class="md-3">
                             <label class="form-label">privilege name</label> 
-                            <input type="text" class="form-control" placeholder="etc : privilege set for admin" name="privilege_name_{{id}}" readonly value={{name}}>
+                            <input type="text" class="form-control" placeholder="ex : privilege set for admin" name="privilege_name_{{id}}" readonly value={{name}}>
                         </div>
                         <div class="md-3">
                             <label class="form-label">privilege desc</label> 
-                            <input type="text" class="form-control" placeholder="etc : privilege set for admin" name="privilege_desc_{{id}}" readonly value={{desc}}>
+                            <input type="text" class="form-control" placeholder="ex : privilege set for admin" name="privilege_desc_{{id}}" readonly value={{desc}}>
                         </div>
                     {{/privileges}}
                 </div>

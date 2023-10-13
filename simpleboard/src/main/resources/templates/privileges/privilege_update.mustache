@@ -4,19 +4,27 @@
     {{>partials/head_partial}}
     <body>
         {{>partials/header_partial}}
-        <div id="content">
+        <div class="container-fluid">
             <p>Welcome to Privilege update page!</p>
             {{#privilege}}
             <form action="/privileges/{{id}}" method = "POST">
                 <input type="hidden" value={{id}} name="id">
-                <label>privilege name : </label><input type="text" name="name" value="{{name}}"><br>
-                <label>privilege desc : </label><input type="text" name="desc" value="{{desc}}"><br>
-                <input type="submit" value="do update!">
+                <div class="md-3">
+                    <label class="form-label">privilege name</label> 
+                    <input type="text" class="form-control" placeholder="ex : post_write" name="name" value="{{name}}">
+                </div>
+                <div class="md-3">
+                    <label class="form-label">privilege desc</label> 
+                    <input type="text" class="form-control" placeholder="ex : privilege for post write" name="desc" value="{{desc}}">
+                </div>
+                
+                <div>
+                    <br>
+                    <input class="btn btn-info" type="submit" value="do update!">
+                    <button class="btn btn-secondary" type="button" onclick="location.href='/privileges'">back to list!</button>
+                </div>
             </form>
             {{/privilege}}
-        </div>
-        <div>
-            <button type="button" onclick="location.href='/privileges'">go back to privilege list</button>
         </div>
         <script>
         </script>

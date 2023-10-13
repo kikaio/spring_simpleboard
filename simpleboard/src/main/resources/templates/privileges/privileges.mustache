@@ -4,27 +4,36 @@
     {{>partials/head_partial}}
     <body>
         {{>partials/header_partial}}
-        <div id="content">
-            <p>Welcome to privilege list page</p>
-            <table>
-            <th>privilege name</th>
-            <th>desc</th>
-            <th>update</th>
-            <th>delete</th>
-            {{#privileges}}
-            <tr>
-            <td><label><a href="/privileges/{{id}}">{{name}}</label></td>
-            <td><label>{{desc}}</label></td>
-            <td><button type="button" onclick="location.href='/privileges/update?id={{id}}'" >do it!</button></td>
-            <td><button type="button" onclick="onDelete({{id}})" >do it!</button></td>
-            </tr>
-            {{/privileges}}
+        <div class = "container-fluid">
+            <p>권한(Privileges) 목록 Page 입니다.</p>
+            <div>
+                <button type="button" class="btn btn-primary" onclick="location.href='/privileges/create'">권한 생성하기</button>
+            </div> 
+            <br>
+            <table class="table table-striped table-hover table-bordered">
+                <thead >
+                    <tr>
+                        <th>privilege name</th>
+                        <th>desc</th>
+                        <th>detail</th>
+                        <th>update</th>
+                        <th>delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {{#privileges}}
+                    <tr>
+                        <td><label>{{name}}</label></td>
+                        <td><label>{{desc}}</label></td>
+                        <td><button class="btn btn-info" type="button" onclick="location.href='/privileges/{{id}}'" >do it!</button></td>
+                        <td><button class="btn btn-warning" type="button" onclick="location.href='/privileges/update?id={{id}}'" >do it!</button></td>
+                        <td><button class="btn btn-danger" type="button" onclick="onDelete({{id}})" >do it!</button></td>
+                        </tr>
+                {{/privileges}}
+                </tbody>
             </table>
         </div>
-        <div>
-        <button type="buttom" onclick="location.href='/privileges/create'">create new role!</button><br>
-        <button type="buttom" onclick="location.href='/'">go to index!</button>
-        </div>
+
         <script>
         function onDelete(id)
         {

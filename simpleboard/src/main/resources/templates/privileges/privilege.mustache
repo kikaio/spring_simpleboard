@@ -4,15 +4,27 @@
     {{>partials/head_partial}}
     <body>
         {{>partials/header_partial}}
-        <div id="content">
-            <p>Welcome to Privilege detail page</p>
+        <div class = "container-fluid">
+            <p>권한 정보 Page 입니다.</p>
             {{#privilege}}
-                <label>privilege name : {{name}}</label><br>
-                <label>privilege desc : {{desc}}</label>
+            <form>
+                <div class = "container-fluid">
+                    <div class="md-3">
+                        <label class="form-label">privilege name</label> 
+                        <input type="text" class="form-control" placeholder="ex : post_write" name="name" readonly disabled value="{{name}}">
+                    </div>
+                    <div class="md-3">
+                        <label class="form-label">privilege desc</label> 
+                        <input type="text" class="form-control" placeholder="ex : privilege for post write" name="desc" disabled readonly value="{{desc}}">
+                    </div>
+                </div>
+            </form>
+            <div class = "container-fluid">
+                <br>
+                <button class="btn btn-info" type="button" onclick="location.href='/privileges/update?id={{id}}'">go to update</button>
+                <button class="btn btn-secondary" type="button" onclick="location.href='/privileges'">back to list</button>
+            </div>
             {{/privilege}}
-        </div>
-        <div>
-        <button type="button" onclick="location.href='/privileges'">go back to role list</button>
         </div>
         <script>
         </script>
