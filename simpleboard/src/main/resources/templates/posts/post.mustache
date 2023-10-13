@@ -5,30 +5,49 @@
     <body>
         {{>partials/header_partial}}
         {{#post}}
-        <div id="content">
-            <div>
-            <label>title : {{title}}</label>
-            </div>
-            <div>
-            <label>contents</label>
-            <br>
-            <p>{{content}}</p>
-            </div>
-        </div>
-        {{#comments}}
-            {{>comments/comment_partial}}
-        {{/comments}}
-        <div style="border:3px solid">
-            <form action = "/comments/create", method = "POST">
-                <input type="hidden" name="postId" value={{post.id}}>
-                <label>comment : </label><input type="text" name="comment"><br>
-                <input type="submit" value="add comment to this post!">
+        <div class = "container-fluid">
+            <form>
+                <div class="md-3">
+                    <label class="form-label">Post Tile</label> 
+                    <input type="text" class="form-control" name="title" readonly disabled value="{{title}}">
+                </div>
+                <div class="md-3">
+                    <label class="form-label">Post content</label> 
+                    <input type="text" class="form-control" name="content" readonly disabled value="{{content}}">
+                </div>
             </form>
         </div>
-        {{/post}}
-        <div>
-            <button type="button" onclick="location.href='/boards/{{board_id}}'">go back to board</button>
+        <div class = "container-fluid">
+            <br>
+            <p>댓글 목록</p>
+            {{#comments}}
+                {{>comments/comment_partial}}
+            {{/comments}}
         </div>
+
+        <div class = "container-fluid" >
+            <div style="border:3px solid" class = "container-fluid">
+                <p>댓글 창</p>
+                <form action = "/comments/create", method = "POST">
+                    <input type="hidden" name="postId" value={{post.id}}>
+                    <div class="md-3">
+                        <input type="text" class="form-control" placeholder="ex : this is comment! woo!!!!" name="comment" >
+                    </div>
+                    <div class="md-3">
+                        <br>
+                        <input class="btn btn-info" type="submit" value="댓글 작성">
+                    </div>
+                </form>
+                <br>
+            </div>
+        </div>
+
+        <div class = "container-fluid">
+            <br>
+            <button class="btn btn-warning" type="button" onclick="location.href='/posts/update?id={{post.id}}'">게시물 수정</button>
+            <button class="btn btn-secondary" type="button" onclick="location.href='/boards/{{board_id}}'">게시판으로 이동</button>
+        </div>
+        {{/post}}
         <script src="/js/simple_script.js">
         </script>
     </body>

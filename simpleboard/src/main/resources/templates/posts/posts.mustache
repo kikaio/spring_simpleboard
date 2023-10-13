@@ -4,32 +4,37 @@
     {{>partials/head_partial}}
     <body>
         {{>partials/header_partial}}
-        <p>Welcome to My Awesome Site - all posts page</p>
-        <div id="content">
+        <div class = "container-fluid">
+           <p>모든 Post 목록 확인용 Page 입니다.[게시글 작성 불가.]</p>
+        </div>
+        <div class = "container-fluid">
+            <button class="btn btn-primary" type="button" onclick="location.href='/boards/create'">게시판 목록으로 이동</button>
+        </div>
+        <br>
+        <div class = "container-fluid">
             <div>
-                <table>
+                <table  class="table table-striped table-hover table-bordered">
                     <thead>
-                        <td>board name</td>
-                        <td>post id</td>
-                        <td>post title</td>
-                        <td>update</td>
-                        <td>delete</td>
+                        <tr>
+                            <th>post id</th>
+                            <th>post title</th>
+                            <th>board name</th>
+                            <th>update</th>
+                            <th>delete</th>
+                        </tr>
                     </thead>
                     <tbody>
                     {{#posts}}
                         <tr>
-                            <td><a href="/boards/{{board.id}}">{{board.name}}</a></td>
                             <td>{{id}}</td>
                             <td><a href="/posts/{{id}}?board_id={{board.id}}">{{title}}</a></td>
+                            <td><a href="/boards/{{board.id}}">{{board.name}}</a></td>
                             <td><button type="button" onclick="location.href='/posts/update?id={{id}}'">do it!</button></td>
                             <td><button type="button" onclick="doPostDelete({{id}})">do it!</button></td>
                         </tr>
                     {{/posts}}
                     </tbody>
                 </table>
-            </div>
-            <div>
-                <button type="button" onclick="location.href='/boards'">go to board list</button>
             </div>
         </div>
         <script>

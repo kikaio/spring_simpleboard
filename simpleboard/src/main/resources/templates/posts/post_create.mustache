@@ -4,22 +4,26 @@
     {{>partials/head_partial}}
     <body>
         {{>partials/header_partial}}
-        <div>
-            <p>Board name is {{board_name}}, post create page</p>
-            <div id="content">
-                <form method="POST" action="/posts/create">
-                    <input name = "board_id" type="hidden" value={{board_id}}> 
-                    <div>
-                    <label>post title : </label><input type="text" name = "title">
-                    </div>
-                    <div>
-                    <label>contents : </label><br/><input type="text" name = "content">
-                    </div>
-                    <div>
-                    <input type="submit" value="post create!">
-                    </div>
-                </form>
-            </div>
+        <div class = "container-fluid">
+            <p>{{board_name}} 게시판에 게시물을 작성 합니다.</p>
+        </div>
+        <div class = "container-fluid">
+            <form method="POST" action="/posts/create">
+                <input name = "board_id" type="hidden" value={{board_id}}> 
+                <div class="md-3">
+                    <label class="form-label">post's title</label> 
+                    <input type="text" class="form-control" placeholder="ex : today's new" name="title">
+                </div>
+                <div class="md-3">
+                    <label class="form-label">post's content</label> 
+                    <input type="text" class="form-control" placeholder="ex : bla bla bla" name="content">
+                </div>
+                <div>
+                    <br>
+                    <input class="btn btn-info" type="submit" value="post create!">
+                    <button class="btn btn-secondary" type="button" onclick="location.href='/boards/{{board_id}}'">back to board</button>
+                </div>
+            </form>
         </div>
         <script>
         </script>

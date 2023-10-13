@@ -8,9 +8,12 @@
         <p>Welcome to My Awesome Site - Board Detail Page</p>
         <div class = "container-fluid">
             <p>{{board.name}} 게시판 정보 Page 입니다.</p>
-            <button class="btn btn-primary" type="button" onclick="location.href='/posts/create?board_id={{board.id}}&board_name={{board.name}}'">create post on this board</button>
-            <button class="btn btn-warning" type="button" onclick="location.href='/boards/update?id={{board.id}}'">go to board update</button>
-            <button class="btn btn-secondary" type="button" onclick="location.href='/boards'">back to board list</button>
+            <button class="btn btn-warning" type="button" onclick="location.href='/boards/update?id={{board.id}}'">게시판 정보 수정</button>
+            <button class="btn btn-secondary" type="button" onclick="location.href='/boards'">게시판 목록으로 이동</button>
+        </div>
+        <br>
+        <div class = "container-fluid">
+            <button class="btn btn-primary" type="button" onclick="location.href='/posts/create?board_id={{board.id}}&board_name={{board.name}}'">게시글 작성</button>
         </div>
         <br>
         <div class="container-fluid">

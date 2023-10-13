@@ -2,20 +2,24 @@
 <html lang="en">
     {{>partials/head_partial}}
     <body>
+    {{>partials/header_partial}}
     {{#post}}
-        {{>partials/header_partial}}
-        <div id="content">
+        <div class = "container-fluid">
             <form method="POST" action="/posts/{{id}}">
-                <input name = "id" type="hidden" value={{id}}>
                 <input name = "board_id" type="hidden" value={{board.id}}>
-                <div>
-                    <label>post title : </label><input type="text" name = "title" value={{title}}>
+                <input name = "id" type="hidden" value={{id}}>
+                <div class="md-3">
+                    <label class="form-label">Post Tile</label> 
+                    <input type="text" class="form-control" name="title" value="{{title}}">
                 </div>
-                <div>
-                <label>contents : </label><br/><input type="text" name = "content" value={{content}}>
+                <div class="md-3">
+                    <label class="form-label">Post content</label> 
+                    <input type="text" class="form-control" name="content" value="{{content}}">
                 </div>
-                <div>
-                <input type="submit" value="post update!">
+                <div class = "container-fluid">
+                    <br>
+                    <input class="btn btn-warning" type="submit" value="수정 적용">
+                    <button class="btn btn-secondary" type="button" onclick="location.href='/boards/{{board.id}}'">게시판으로 이동</button>
                 </div>
             </form>
         </div>
