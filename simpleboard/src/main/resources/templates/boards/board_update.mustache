@@ -4,24 +4,31 @@
     {{>partials/head_partial}}
     <body>
         {{>partials/header_partial}}
-        <p>Welcome to My Awesome Site - Board Update Page</p>
-        <div id="content">
-            {{#board}}
+        {{^board}}
+        <label>게시판 정보가 존재하지 않습니다.</label>
+        {{/board}}
+        {{#board}}
+        <div class="container-fluid">
+            <p>게시판 정보 수정 Page 입니다.</p>
             <form action="/boards/{{id}}" method="post">
-                <div>
-                    <input type="hidden" name="id" value={{id}} />
-                    <label>origin name : {{name}}</label><p></p>
-                    <label>new name : </label> <input type="text" name="name" />
+                <input type="hidden" name="id" value={{id}} />
+                <div class="md-3">
+                    <label class="form-label">Original board name</label> 
+                    <input type="text" class="form-control" value="{{name}}" readonly disabled>
+                    <br>
+                </div>
+                <div class="md-3">
+                    <label class="form-label">New board name</label> 
+                    <input type="text" class="form-control" placeholder="ex : news" name="name">
                 </div>
                 <div>
-                    <input type="submit" value="do update" />
+                    <br>
+                    <input class="btn btn-info" type="submit" value="do update" />
+                    <button class="btn btn-secondary"type="button" onclick="location.href='/boards'">back to list</button>
                 </div>
             </form>
-            {{/board}}
-            {{^board}}
-            <label>not exist board</label>
-            {{/board}}
         </div>
+        {{/board}}
         <script></script>
     </body>
 </html>

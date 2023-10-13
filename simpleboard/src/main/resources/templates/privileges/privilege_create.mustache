@@ -4,12 +4,19 @@
     {{>partials/head_partial}}
     <body>
         {{>partials/header_partial}}
-        <div id="content">
+        <div class="container-fluid">
             <p>Welcome to Privilege list page</p>
             <form action="/privileges/create" method="POST">
-                <label>privilege name : </label><input type="text" name="name"><br>
-                <label>privilege desc : </label><input type="text" name="desc"><br>
-                <input type="submit" value="do create!">
+                <div class="md-3">
+                    <label class="form-label">privilege name</label> 
+                    <input type="text" class="form-control" placeholder="ex : post_write" name="name">
+                </div>
+                <div class="md-3">
+                    <label class="form-label">privilege desc</label> 
+                    <input type="text" class="form-control" placeholder="ex : privilge for post_write" name="desc">
+                </div>
+                <br>
+                <input class="btn btn-info" type="submit" value="do create!">
             </form>
         </div>
         <script>

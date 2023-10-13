@@ -4,32 +4,38 @@
     {{>partials/head_partial}}
     <body>
         {{>partials/header_partial}}
+        {{#board}}
         <p>Welcome to My Awesome Site - Board Detail Page</p>
-        <div id="content">
+        <div class = "container-fluid">
+            <p>{{board.name}} 게시판 정보 Page 입니다.</p>
+            <button class="btn btn-primary" type="button" onclick="location.href='/posts/create?board_id={{board.id}}&board_name={{board.name}}'">create post on this board</button>
+            <button class="btn btn-warning" type="button" onclick="location.href='/boards/update?id={{board.id}}'">go to board update</button>
+            <button class="btn btn-secondary" type="button" onclick="location.href='/boards'">back to board list</button>
+        </div>
+        <br>
+        <div class="container-fluid">
             <input type="hidden" value={{board.id}} name="board_id"/>
-            <p>Hello, cur board is {{board.name}}!</p>
             <div>
-            <table>
-            <tr>
-                <th>post id</th>
-                <th>post title</th>
-                <th>update</th>
-                <th>delete</th>
-            </tr>
-            {{#posts}}
-            <tr>
-                <td>{{id}}</td>
-                <td><a href="/posts/{{id}}?board_id={{board.id}}">{{title}}</a></td>
-                <td><button type="button" onclick="location.href='/posts/update?id={{id}}'">do it!</button></td>
-                <td><button type="button" onclick="doPostDelete({{id}})">do it!</button></td>
-            </tr>
-            {{/posts}}
+            <table class="table table-striped table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th>post id</th>
+                        <th>post title</th>
+                        <th>update</th>
+                        <th>delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {{#posts}}
+                <tr>
+                    <td>{{id}}</td>
+                    <td><a href="/posts/{{id}}?board_id={{board.id}}">{{title}}</a></td>
+                    <td><button class="btn btn-warning" type="button" onclick="location.href='/posts/update?id={{id}}'">do it!</button></td>
+                    <td><button class="btn btn-danger" type="button" onclick="doPostDelete({{id}})">do it!</button></td>
+                </tr>
+                {{/posts}}
+                </tbody>
             </table>
-            </div>
-            <div>
-                <button type="button" onclick="location.href='/posts/create?board_id={{board.id}}&board_name={{board.name}}'">create post on this board</button>
-                <br>
-                <button type="button" onclick="location.href='/boards'">go to board list</button>
             </div>
         </div>
         <script>
@@ -47,6 +53,7 @@
             http.send();
         }
         </script>
+        {{/board}}
     </body>
     {{>partials/footer_partial}}
 </html>

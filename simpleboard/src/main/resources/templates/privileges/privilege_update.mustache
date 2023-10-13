@@ -5,7 +5,7 @@
     <body>
         {{>partials/header_partial}}
         <div class="container-fluid">
-            <p>Welcome to Privilege update page!</p>
+            <p>권한 수정 Page 입니다.</p>
             {{#privilege}}
             <form action="/privileges/{{id}}" method = "POST">
                 <input type="hidden" value={{id}} name="id">
