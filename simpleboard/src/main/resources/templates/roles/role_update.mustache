@@ -8,9 +8,10 @@
             <div class = "container-fluid">
                 <p>역할 정보 갱신 page 입니다.</p>
             </div>
-            <form>
+            {{#role}}
+            <form action="/roles/{{id}}" method="POST">
                 <div class = "container-fluid">
-                {{#role}}
+                    <input type="hidden" value={{id}} name="role_id">
                     <div class="md-3">
                         <label class="form-label">role name</label> 
                         <input type="text" class="form-control" placeholder="etc : admin" name="name" value={{name}}>
@@ -29,36 +30,18 @@
                             <input type="text" class="form-control" placeholder="etc : privilege set for admin" name="privilege_desc_{{id}}" readonly value={{desc}}>
                         </div>
                     {{/privileges}}
-                {{/role}}
+                </div>
+                <div class = "container-fluid">
+                    <br>
+                    <input type="submit" class="btn btn-info" value="role update!">
+                    <button class="btn btn-info" type="button" onclick="location.href='/roles'">back to role list</button>
                 </div>
             </form>
+            {{/role}}
         </div>
         <br>
-        <div class = "container-fluid">
-            <button class="btn btn-info" type="button" onclick="doUpdate({{role.id}})">role update!</button>
-            <button class="btn btn-info" type="button" onclick="location.href='/roles'">back to role list</button>
-        </div>
 
-        <script>
-            function doUpdate(role_id)
-            {
-                var http = new XMLHttpRequest();
-                var url_to = window.location.origin + "/roles/" + role_id;
-                http.open("POST", url_to);
-                http.setRequestHeader("content-type", "application/x-www-form-urlencoded");
-
-                var role_div = document.getElementById("role_div");
-                var role_name = document.getElementsByName('name')[0].value;
-                var role_desc = document.getElementsByName("desc")[0].value;
-                var requset_body = 
-                    "name="+role_name
-                    + "&"
-                    + "desc="+role_desc
-                ;
-                console.log("send req body : "+requset_body);
-                http.send(requset_body);
-            };
-        </script>
+        <script src="/js/simple_script.js"></script>
     </body>
     {{>partials/footer_partial}}
 </html>

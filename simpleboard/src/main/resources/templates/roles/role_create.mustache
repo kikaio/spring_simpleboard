@@ -4,12 +4,22 @@
     {{>partials/head_partial}}
     <body>
         {{>partials/header_partial}}
-        <div id="content">
-            <p>Hello, World!, Welcome to Role list page</p>
+        <div id="content" class="container-fluid">
+            <p>역할 생성 page 입니다.</p>
             <form action="/roles/create" method="POST">
-                <label>role name : </label><input type="text" name="name"><br>
-                <label>role desc : </label><input type="text" name="desc"><br>
-                <input type="submit" value="do create!">
+                <div class="md-3">
+                    <label class="form-label">role name</label> 
+                    <input type="text" class="form-control" placeholder="etc : admin" name="name">
+                </div>
+                <div class="md-3">
+                    <label class="form-label">role desc</label> 
+                    <input type="text" class="form-control" placeholder="etc : authorization desc for admin" name="desc">
+                </div>
+                <br>
+                <div>
+                    <input class="btn btn-info" type="submit" value="do create!">
+                    <button class="btn btn-secondary" type="button" onclick="location.href='/roles'">back to list!</button>
+                </div>
             </form>
         </div>
         <script>
