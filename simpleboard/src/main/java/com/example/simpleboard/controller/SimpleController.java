@@ -19,4 +19,10 @@ public class SimpleController
             log.info("auth user name[%s]".formatted(auth.getName()));
         return "index";
     }    
+
+    @GetMapping("/about")
+    public String about()
+    {
+        return "about";
+    }
 }
