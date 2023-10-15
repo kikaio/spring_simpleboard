@@ -41,7 +41,7 @@ public class Comment
     @ToString.Exclude
     private Post post;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_id", referencedColumnName = "id", nullable = true, unique = false)
     @ToString.Exclude
     @OnDelete(action = OnDeleteAction.SET_NULL)

@@ -90,3 +90,23 @@ function clickEditCommentBtn(comment_id)
     comment_edit_div.style.display = 'block';
     return ;
 };
+
+function clickReplyCommentBtn(comment_id)
+{
+    var targetName = "comment_reply_div_"+comment_id;
+    console.log("clickEditCommentBtn : target - " + targetName );
+
+    var comment_reply_div = document.getElementsByName(targetName)[0];
+    comment_reply_div.style.display = 'block';
+    return ;
+};
+
+function cancleReplyCommentBtn(comment_id)
+{
+    var targetName = "comment_reply_div_"+comment_id;
+    console.log("cancleEditCommentBtn : target - "+targetName);
+
+    var comment_reply_div = document.getElementsByName(targetName)[0];
+    comment_reply_div.style.display = 'none';
+    return ;
+};

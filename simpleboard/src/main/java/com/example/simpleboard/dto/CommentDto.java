@@ -118,7 +118,7 @@ public class CommentDto {
                     , false
                     , new ArrayList<CommentDto>()
                 );
-                parentMap.put(parentId, null);
+                parentMap.put(parentId, parent);
                 parentComment = parent;
             }
             parentComment.addChild(dto);

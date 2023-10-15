@@ -4,30 +4,46 @@
     {{/isDeleted}}
     {{^isDeleted}}
     {{#comment}}
-        <div>
-            {{#parentId}}
-            <label>re to {{parentId}}: {{comment}}</label>
-            {{/parentId}}
-            {{^parentId}}
-            <label>{{id}} : {{comment}}</label>
-            {{/parentId}}
-            <button type="text" onclick="doDeleteComment({{boardId}}, {{postId}}, {{id}})">delete</button>
-            <button type="text" onclick="clickEditCommentBtn({{id}})">edit</button>
-        </div>
-        <div style="display:none" name="comment_edit_div_{{id}}">
-            <form action="/comments/{{id}}" method = "POST">
-                <input type="hidden" name="id" value="{{id}}">
-                <input type="hidden" name="boardId" value="{{boardId}}">
-                <input type="hidden" name="postId" value="{{postId}}">
+        <div class="container-fluid">
+            <div class="input-group input-group-sm mb-3">
                 {{#parentId}}
-                    <input type="hidden" name="parentId" value="{{parentId}}">
+                <span class="input-group-text" id="inputGroup-sizing-sm">ㄴ{{id}}</span>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" readonly value="{{comment}}">
                 {{/parentId}}
-                <input type="hidden" name="isDeleted" value="{{isDeleted}}">
-                <input type="hidden" name="isParentLive" value="{{isParentLive}}">
-                <label>{{id}}'s update comment : </label><input type="text" name="comment">
-                <input type="submit" value="do update!">
-                <button type="button" onclick="cancleEditCommentBtn({{id}})">cancle update.</button>
-            </form>
+                {{^parentId}}
+                <span class="input-group-text" id="inputGroup-sizing-sm">{{id}}</span>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" readonly value="{{comment}}">
+                <button class ="btn btn-info" type="text" onclick="clickReplyCommentBtn({{id}})">답글달기</button>
+                {{/parentId}}
+                <button class ="btn btn-warning" type="text" onclick="clickEditCommentBtn({{id}})">수정</button>
+                <button class ="btn btn-danger" type="text" onclick="doDeleteComment({{boardId}}, {{postId}}, {{id}})">삭제</button>
+            </div>
+            <div style="display:none" name="comment_reply_div_{{id}}">
+                <form class="input-group"  action="/comments/create" method = "POST">
+                    <input type="hidden" name="postId" value="{{postId}}">
+                    <input type="hidden" name="parentId" value="{{id}}">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">reply to {{id}}</span>
+                    <input  type="text" class="form-control" aria-label="Sizing example input" placeholder="try write to reply comment" name="comment">
+                    <input class="btn btn-warning"type="submit" value="답글 달기!">
+                    <button class="btn btn-secondary" type="button" onclick="cancleReplyCommentBtn({{id}})">취소</button>
+                </form>
+            </div>
+            <div style="display:none" name="comment_edit_div_{{id}}">
+                <form class="input-group"  action="/comments/{{id}}" method = "POST">
+                    <input type="hidden" name="id" value="{{id}}">
+                    <input type="hidden" name="boardId" value="{{boardId}}">
+                    <input type="hidden" name="postId" value="{{postId}}">
+                    {{#parentId}}
+                        <input type="hidden" name="parentId" value="{{parentId}}">
+                    {{/parentId}}
+                    <input type="hidden" name="isParentLive" value="{{isParentLive}}">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">update comment</span>
+                    <input  type="text" class="form-control" aria-label="Sizing example input" placeholder="try write to update comment" name="comment">
+                    <input class="btn btn-warning"type="submit" value="적용!">
+                    <button class="btn btn-secondary" type="button" onclick="cancleEditCommentBtn({{id}})">취소</button>
+                </form>
+            </div>
+            <br>
         </div>
     {{/comment}}
     {{/isDeleted}}
