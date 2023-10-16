@@ -1,5 +1,9 @@
 package com.example.simpleboard.controller;
 
+import java.util.ArrayList;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +34,10 @@ public class PostController {
     private final BoardService boardService;
     private final CommentService commentService;
 
+    private static final int cntPerPage = 3;
+    private static final int pageBarCnt = 10;
+
+
     public PostController(
         PostService postService
         , BoardService boardService
@@ -48,7 +56,13 @@ public class PostController {
     {
         //all post get.
         var posts = postService.getPosts();
-        model.addAttribute("posts", posts);
+        ArrayList<PostDto> postsDtos = new ArrayList<>();
+
+        posts.forEach(entity->{
+            postsDtos.add(new PostDto(entity));
+        });
+        
+        model.addAttribute("posts", postsDtos);
         return "/posts/posts";
     }
 
@@ -56,6 +70,7 @@ public class PostController {
     public String getPost(
         @PathVariable(name = "id", required = true) long id
         , @RequestParam(name="board_id", required = true) long board_id
+        , @RequestParam(name="pageNo", defaultValue = "1") int pageNo
         , Model model
     ) throws Exception
     {
@@ -64,6 +79,12 @@ public class PostController {
         {
             throw new Exception("board[%d] not exist in repo".formatted(board_id));
         }
+        int pageIdx = pageNo-1;
+        var pageable = PageRequest.of(pageIdx, cntPerPage);
+        int pageScopeStart = (pageNo/pageBarCnt)+1;
+        int pageScopeEnd = pageScopeStart + pageBarCnt-1;
+        // todo : redis에 해당 post max 갯수 확인 후 관련 처리 추가 할 것.
+        int allCommentCnt = 0; 
 
         String board_name = board.getName();
         var post = postService.getPost(id);
@@ -71,13 +92,13 @@ public class PostController {
         {
             throw new Exception("post[%d] not exist in repo".formatted(id));
         }   
-        
-        var comments = commentService.getCommentsUsingPost(post);
-        var commentDtos = CommentDto.calcCommentsChilds(comments, false);
+        var postDto = new PostDto(post);
+        var comments = commentService.getCommentsUsingPost(post, pageable);
+        var commentDtos = CommentDto.calcCommentsChilds(comments.toList(), false);
 
         model.addAttribute("board_id", board_id);
         model.addAttribute("board_name", board_name);
-        model.addAttribute("post", post);
+        model.addAttribute("post", postDto);
         model.addAttribute("comments", commentDtos);
         return "/posts/post";
     }

@@ -22,6 +22,8 @@ public class PostDto {
 
     private Long board_id;
 
+    private int curPageNum = 0;
+
     public PostDto(Post post)
     {
         fromEntity(post);

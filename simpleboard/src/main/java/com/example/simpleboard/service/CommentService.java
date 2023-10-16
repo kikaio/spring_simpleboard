@@ -2,6 +2,8 @@ package com.example.simpleboard.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.simpleboard.entity.Comment;
@@ -24,9 +26,9 @@ public class CommentService {
         return commentRepository.findAll();
     }
 
-    public List<Comment> getCommentsUsingPost(Post post)
+    public Page<Comment> getCommentsUsingPost(Post post, Pageable pageable)
     {
-        return commentRepository.findByPost(post);
+        return commentRepository.findByPost(post, pageable);
     }
 
     public Comment getComment(long id)
