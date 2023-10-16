@@ -2,7 +2,7 @@
 <html lang="en">
 <html>
     {{>partials/head_partial}}
-    <body>
+    <body class="d-flex flex-column min-vh-100">
         {{>partials/header_partial}}
         {{#board}}
         <p>Welcome to My Awesome Site - Board Detail Page</p>
@@ -57,6 +57,6 @@
         }
         </script>
         {{/board}}
+{{>partials/footer_partial}}
     </body>
-    {{>partials/footer_partial}}
 </html>

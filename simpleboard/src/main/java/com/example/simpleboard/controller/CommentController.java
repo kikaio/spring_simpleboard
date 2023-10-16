@@ -1,5 +1,9 @@
 package com.example.simpleboard.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.simpleboard.dto.CommentDto;
+import com.example.simpleboard.dto.CommentListDto;
 import com.example.simpleboard.entity.Board;
 import com.example.simpleboard.entity.Comment;
 import com.example.simpleboard.entity.Post;
@@ -79,7 +84,38 @@ public class CommentController
     {
         var comments = commentService.getComments();
         var commentDtos = CommentDto.calcCommentsChilds(comments);
-        model.addAttribute("comments", commentDtos);
+        HashMap<Long, Pair<Long, String>> cacheMap = new HashMap<>();
+        HashMap<Long, ArrayList<CommentDto>> commentDtoCache = new HashMap<>();
+
+        comments.forEach(entity->{
+            var postEntity = entity.getPost();
+            if (postEntity == null || postEntity.getBoard() == null)
+            {
+                return ;
+            }
+            var board = postEntity.getBoard();
+            var postId = postEntity.getId();
+            var postTitle = postEntity.getTitle();
+            cacheMap.put(postId, Pair.of(board.getId(), postTitle));
+        });
+
+        commentDtos.forEach(dto->{
+            Long postId = dto.getPostId();
+            if(commentDtoCache.containsKey(postId) == false)
+            {
+                commentDtoCache.put(postId, new ArrayList<>());
+            }
+            var value = commentDtoCache.get(postId);
+            value.add(dto);
+        });
+
+        ArrayList<CommentListDto> retModel = new ArrayList<>();
+        cacheMap.forEach((postId, val)->{
+            CommentListDto dto = new CommentListDto(postId, val.getFirst(), val.getSecond(), commentDtoCache.get(postId));
+            retModel.add(dto);
+        });
+
+        model.addAttribute("commentContainer", retModel);
         return "/comments/comments";
     }
 

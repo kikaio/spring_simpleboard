@@ -2,24 +2,26 @@
 <html lang="en">
 <html>
     {{>partials/head_partial}}
-    <body>
+    <main class="d-flex flex-column min-vh-100">
         {{>partials/header_partial}}
-        <div id="content" class = "container-fluid">
-            <div>
-                <p>게시판 생성 page 입니다.</p>
-            </div>
-            <form action="/boards/create" method="post">
-                <div class="md-3">
-                    <label class="form-label">board's name</label> 
-                    <input type="text" class="form-control" placeholder="ex : news board" name="name">
-                </div>
+        <body>
+            <div id="content" class = "container-fluid">
                 <div>
-                    <br>
-                    <input class="btn btn-info" type="submit" value="do create!!">
+                    <p>게시판 생성 page 입니다.</p>
                 </div>
-            </form>
-        </div>
-        <script></script>
-    </body>
-    {{>partials/footer_partial}}
+                <form action="/boards/create" method="post">
+                    <div class="md-3">
+                        <label class="form-label">board's name</label> 
+                        <input type="text" class="form-control" placeholder="ex : news board" name="name">
+                    </div>
+                    <div>
+                        <br>
+                        <input class="btn btn-info" type="submit" value="do create!!">
+                    </div>
+                </form>
+            </div>
+            <script></script>
+        </body>
+        {{>partials/footer_partial}}
+    </main>
 </html>

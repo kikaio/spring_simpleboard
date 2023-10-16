@@ -16,7 +16,10 @@ public class SimpleController
     public String index(Authentication auth)
     {
         if(auth != null)
+        {
             log.info("auth user name[%s]".formatted(auth.getName()));
+        }
+
         return "index";
     }    
 

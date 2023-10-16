@@ -2,7 +2,7 @@
 <html lang="en">
 <html>
     {{>partials/head_partial}}
-    <body>
+    <body class="d-flex flex-column min-vh-100">
         {{>partials/header_partial}}
         <div class = "container-fluid">
             <p>권한(Privileges) 목록 Page 입니다.</p>
@@ -49,6 +49,6 @@
             http.send();
         }
         </script>
+{{>partials/footer_partial}}
     </body>
-    {{>partials/footer_partial}}
 </html>

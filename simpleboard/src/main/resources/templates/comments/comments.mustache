@@ -2,12 +2,22 @@
 <html lang="en">
 <html>
     {{>partials/head_partial}}
-    <body>
+    <body class="d-flex flex-column min-vh-100">
         {{>partials/header_partial}}
-        {{#comments}}
-        {{>comments/comment_partial}}
-        {{/comments}}
-        <script></script>
+        <div class="container-fluid">
+            <p>현재 작성된 모든 댓글 확인용 Page 입니다.</p>
+            {{#commentContainer}}
+                <div class = "container-fluid">
+                    <a href="/posts/{{postId}}?board_id={{boardId}}">{{postTitle}}</a>
+                    <div class="container-fluid">
+                        {{#comments}}
+                        {{>comments/comment_partial}}
+                        {{/comments}}
+                    </div>
+                </div>
+            {{/commentContainer}}
+        </div>
+        {{>partials/footer_partial}}
     </body>
-    {{>partials/footer_partial}}
+    <script></script>
 </html>

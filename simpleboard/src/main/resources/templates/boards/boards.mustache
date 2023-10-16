@@ -2,10 +2,10 @@
 <html lang="en">
 <html>
     {{>partials/head_partial}}
-    <body>
+    <body class="d-flex flex-column min-vh-100">
         {{>partials/header_partial}}
         <div class = "container-fluid">
-        <p>Welcome to My Awesome Site - Boards List</p>
+        <p>게시판 목록입니다.</p>
         <div>
             <button type="button" class="btn btn-primary" onclick="location.href='/boards/create'">게시판 생성하기</button>
         </div> 
@@ -40,6 +40,7 @@
         </table>
         </div>
     </body>
+    {{>partials/footer_partial}}
     <script>
     function doDelete(num_id)
     {
@@ -55,5 +56,4 @@
         http.send();
     }
     </script>
-    {{>partials/footer_partial}}
 </html>
