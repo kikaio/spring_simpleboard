@@ -6,12 +6,24 @@
         {{>partials/header_partial}}
         <body>
             <div class="container-fluid">
-                <h3>Contact Me</h3>
-                <ul>
-                    <li><label>name : 허영욱</label></li>
-                    <br>
-                    <li><label>Email : gjduddnr5923@naver.com</label></li>
-                </ul>
+                <br>
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h3>Contact Me</h3>
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Info</label>
+                            <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com" value="1990년생 서버 개발자" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Name</label>
+                            <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com" value="허영욱" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com" value="gjduddnr5923@naver.com" readonly>
+                        </div>
+                    </div>
+                </div>
             </div>
         </body>
         {{>partials/footer_partial}}

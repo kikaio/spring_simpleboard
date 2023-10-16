@@ -6,16 +6,20 @@
         {{>partials/header_partial}}
         <div class="container-fluid">
             <p>현재 작성된 모든 댓글 확인용 Page 입니다.</p>
+            <div class="container row justify-content-start">
             {{#commentContainer}}
-                <div class = "container-fluid">
-                    <a href="/posts/{{postId}}?board_id={{boardId}}">{{postTitle}}</a>
-                    <div class="container-fluid">
-                        {{#comments}}
-                        {{>comments/comment_partial}}
-                        {{/comments}}
+                <div class = " input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">제목</span>
+                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" readonly value="{{postTitle}}">
+                    <button class ="btn btn-info" type="text" onclick="location.href='/posts/{{postId}}?board_id={{boardId}}'">게시글로 이동</button>
                     </div>
+                <div class="row justify-content-start">
+                    {{#comments}}
+                    {{>comments/comment_partial}}
+                    {{/comments}}
                 </div>
             {{/commentContainer}}
+            </div>
         </div>
         {{>partials/footer_partial}}
     </body>

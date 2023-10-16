@@ -73,7 +73,7 @@ public class PostController {
         }   
         
         var comments = commentService.getCommentsUsingPost(post);
-        var commentDtos = CommentDto.calcCommentsChilds(comments);
+        var commentDtos = CommentDto.calcCommentsChilds(comments, false);
 
         model.addAttribute("board_id", board_id);
         model.addAttribute("board_name", board_name);

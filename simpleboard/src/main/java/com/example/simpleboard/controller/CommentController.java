@@ -83,7 +83,7 @@ public class CommentController
     public String getAllComments(Model model)
     {
         var comments = commentService.getComments();
-        var commentDtos = CommentDto.calcCommentsChilds(comments);
+        var commentDtos = CommentDto.calcCommentsChilds(comments, true);
         HashMap<Long, Pair<Long, String>> cacheMap = new HashMap<>();
         HashMap<Long, ArrayList<CommentDto>> commentDtoCache = new HashMap<>();
 
@@ -100,6 +100,7 @@ public class CommentController
         });
 
         commentDtos.forEach(dto->{
+            dto.setJustRender(true);
             Long postId = dto.getPostId();
             if(commentDtoCache.containsKey(postId) == false)
             {

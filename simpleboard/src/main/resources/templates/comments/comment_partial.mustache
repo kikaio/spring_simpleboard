@@ -11,11 +11,15 @@
                 <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" readonly value="{{comment}}">
                 {{/parentId}}
                 {{^parentId}}
-                <span class="input-group-text" id="inputGroup-sizing-sm">{{id}}</span>
-                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" readonly value="{{comment}}">
-                <button class ="btn btn-info" type="text" onclick="clickReplyCommentBtn({{id}})">답글달기</button>
+                    <span class="input-group-text" id="inputGroup-sizing-sm">{{id}}</span>
+                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" readonly value="{{comment}}">
+                    {{^isJustRender}}
+                        <button class ="btn btn-info" type="text" onclick="clickReplyCommentBtn({{id}})">답글달기</button>
+                    {{/isJustRender}}
                 {{/parentId}}
-                <button class ="btn btn-warning" type="text" onclick="clickEditCommentBtn({{id}})">수정</button>
+                {{^isJustRender}}
+                    <button class ="btn btn-warning" type="text" onclick="clickEditCommentBtn({{id}})">수정</button>
+                {{/isJustRender}}
                 <button class ="btn btn-danger" type="text" onclick="doDeleteComment({{boardId}}, {{postId}}, {{id}})">삭제</button>
             </div>
             <div style="display:none" name="comment_reply_div_{{id}}">

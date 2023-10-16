@@ -33,6 +33,7 @@ public class CommentDto {
     private boolean isDeleted = false;
     private boolean isParentLive = false;
 
+    private boolean isJustRender = false;
 
     private List<CommentDto> childs = new ArrayList<>();
 
@@ -85,7 +86,7 @@ public class CommentDto {
         childs.add(child);
     } 
 
-    public static ArrayList<CommentDto> calcCommentsChilds(List<Comment> entities)
+    public static ArrayList<CommentDto> calcCommentsChilds(List<Comment> entities, boolean isJustRender)
     {
         var dtos = new ArrayList<CommentDto>();
         TreeMap<Long, CommentDto> parentMap = new TreeMap<>();
@@ -93,6 +94,7 @@ public class CommentDto {
 
         entities.forEach(ele->{
             CommentDto dto = new CommentDto(ele); 
+            dto.setJustRender(isJustRender);
             if(dto.getParentId() != null)
             {
                 childMap.put(dto.getId(), dto);
@@ -115,6 +117,7 @@ public class CommentDto {
                     , null
                     , null
                     , true
+                    , false
                     , false
                     , new ArrayList<CommentDto>()
                 );
