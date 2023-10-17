@@ -2,8 +2,11 @@ package com.example.simpleboard.controller;
 
 import java.util.ArrayList;
 
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.jaxb.PageAdapter;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.example.simpleboard.dto.CommentDto;
 import com.example.simpleboard.dto.PostDto;
+import com.example.simpleboard.dto.SimplePageDto;
 import com.example.simpleboard.entity.Board;
 import com.example.simpleboard.entity.Post;
 import com.example.simpleboard.service.BoardService;
@@ -49,6 +53,25 @@ public class PostController {
         this.commentService = commentService;
     }
 
+    @GetMapping("/test")
+    public String test()
+    {
+        var boards = boardService.getBoards();
+        boards.forEach(board->{
+            for(int idx = 0; idx < 5; idx++)
+            {
+                var post = Post.builder()
+                    .title("test title_%d".formatted(idx+1))
+                    .board(board)
+                    .content("test content")
+                    .build()
+                ;
+                postService.createPost(post);
+            }
+        });
+        return "redirect:/posts";
+    }
+
     @GetMapping("")
     public String getPosts(
         Model model
@@ -69,37 +92,37 @@ public class PostController {
     @GetMapping("/{id}")
     public String getPost(
         @PathVariable(name = "id", required = true) long id
-        , @RequestParam(name="board_id", required = true) long board_id
-        , @RequestParam(name="pageNo", defaultValue = "1") int pageNo
+        , @RequestParam(name="page", defaultValue = "0") int pageIdx
         , Model model
     ) throws Exception
     {
-        var board = boardService.getBoard(board_id);
-        if(board == null)
-        {
-            throw new Exception("board[%d] not exist in repo".formatted(board_id));
-        }
-        int pageIdx = pageNo-1;
-        var pageable = PageRequest.of(pageIdx, cntPerPage);
-        int pageScopeStart = (pageNo/pageBarCnt)+1;
-        int pageScopeEnd = pageScopeStart + pageBarCnt-1;
-        // todo : redis에 해당 post max 갯수 확인 후 관련 처리 추가 할 것.
-        int allCommentCnt = 0; 
+        var commentPageable = PageRequest.of(pageIdx, cntPerPage);
 
-        String board_name = board.getName();
         var post = postService.getPost(id);
         if(post == null)
         {
             throw new Exception("post[%d] not exist in repo".formatted(id));
         }   
+
+        var board = post.getBoard();
+        if(board == null)
+        {
+            throw new Exception("post[%d]'s board' not exist in repo".formatted(id));
+        }
+
+        var board_id = board.getId();
+        var board_name = board.getName();
+        
         var postDto = new PostDto(post);
-        var comments = commentService.getCommentsUsingPost(post, pageable);
+        var comments = commentService.getCommentsUsingPost(post, commentPageable);
         var commentDtos = CommentDto.calcCommentsChilds(comments.toList(), false);
+        var commentPageDto = new SimplePageDto<>(comments);
 
         model.addAttribute("board_id", board_id);
         model.addAttribute("board_name", board_name);
         model.addAttribute("post", postDto);
         model.addAttribute("comments", commentDtos);
+        model.addAttribute("commentPageDto", commentPageDto);
         return "/posts/post";
     }
 
@@ -128,7 +151,7 @@ public class PostController {
             throw new Exception("board[%d] is not exist in boards".formatted(board_id));
         }
         //todo : valid check title, contents, etc
-        Post newPost = postDto.toEntity();
+        Post newPost = postDto.toEntity(board);
         newPost.setBoard(board);
         if(postService.createPost(newPost) == false)
         {
@@ -170,7 +193,7 @@ public class PostController {
             throw new Exception("board id must not null");
         }
         Board board = boardService.getBoard(board_id);
-        Post post = postDto.toEntity();
+        Post post = postDto.toEntity(board);
         post.setBoard(board);
         if(postService.updatePost(id, post) == false)
         {

@@ -49,33 +49,19 @@ public class CommentController
     @GetMapping("/test")
     public String test()
     {
-        boardService.createBoard("testBoard");
-        Board board = boardService.getBoard(1L);
-        Post post = Post.builder()
-            .board(board)
-            .title("test title")
-            .content("test post content str")
-            .build()
-        ;
-        postService.createPost(post);
-        post = postService.getPost(1L);
-
-        var parent = Comment.builder()
-            .comment("test comment")
-            .post(post)
-            .build()
-        ;
-        commentService.createComment(parent);
-
-        Comment child = Comment.builder()
-            .comment("this is child")
-            .parent(parent)
-            .parentRefId(parent.getId())
-            .post(post)
-            .build()
-        ;
-        commentService.createComment(child);
-
+        var posts = postService.getPosts();
+        posts.forEach(post->{
+            var boardId = post.getBoard().getId();
+            var postId = post.getId();
+            for(int idx = 0; idx < 16; idx++)
+            {
+                var commentDto = new CommentDto(
+                    null, boardId, postId, null
+                    , "test comment_%d".formatted(idx+1), false, false, false, null
+                );
+                commentService.createComment(commentDto.toEntity(post, null));
+            }
+        });
         return "redirect:/comments";
     }
 

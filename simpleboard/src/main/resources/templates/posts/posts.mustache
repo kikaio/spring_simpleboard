@@ -27,8 +27,8 @@
                     {{#posts}}
                         <tr>
                             <td>{{id}}</td>
-                            <td><a href="/posts/{{id}}?board_id={{board.id}}">{{title}}</a></td>
-                            <td><a href="/boards/{{board.id}}">{{board.name}}</a></td>
+                            <td><a href="/posts/{{id}}?board_id={{board_id}}">{{title}}</a></td>
+                            <td><a href="/boards/{{board_id}}">{{board_name}}</a></td>
                             <td><button type="button" onclick="location.href='/posts/update?id={{id}}'">do it!</button></td>
                             <td><button type="button" onclick="doPostDelete({{id}})">do it!</button></td>
                         </tr>

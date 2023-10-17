@@ -43,6 +43,15 @@ public class BoardController {
         this.postService = postService;
     }
 
+    @GetMapping("/test")
+    public String doTest()
+    {
+        boardService.createBoard("test board_1");
+        boardService.createBoard("test board_2");
+        boardService.createBoard("test board_3");
+        return "redirect:/boards";
+    }
+
     @GetMapping()
     public String getBoards(Model model)
     {

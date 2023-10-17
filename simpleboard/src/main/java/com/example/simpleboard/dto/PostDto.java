@@ -1,5 +1,6 @@
 package com.example.simpleboard.dto;
 
+import com.example.simpleboard.entity.Board;
 import com.example.simpleboard.entity.Post;
 
 import lombok.AccessLevel;
@@ -22,19 +23,33 @@ public class PostDto {
 
     private Long board_id;
 
-    private int curPageNum = 0;
+    private String board_name;
 
     public PostDto(Post post)
     {
         fromEntity(post);
     }
 
-    public Post toEntity()
+    public Post toEntity(Board board)
     {
-        return Post.builder()
-            .id(id).title(title).content(content)
-            .build()
-        ;
+        if(board == null)
+        {
+            return Post.builder()
+                .id(id)
+                .title(title)
+                .content(content)
+                .build()
+            ;
+        }
+        else {
+            return Post.builder()
+                .id(id)
+                .title(title)
+                .content(content)
+                .board(board)
+                .build()
+            ;
+        }
     }
 
     public void fromEntity(Post post)
@@ -45,6 +60,7 @@ public class PostDto {
         if(post.getBoard() != null)
         {
             board_id = post.getBoard().getId();
+            board_name = post.getBoard().getName();
         }
         return ;
     }

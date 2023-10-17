@@ -24,6 +24,9 @@
                 {{#comments}}
                     {{>comments/comment_partial}}
                 {{/comments}}
+                {{#commentPageDto}}
+                    {{>layouts/simple_pagination}}
+                {{/commentPageDto}}
             </div>
         <br>
             <div style="border:3px solid" class = "container-fluid g-3">
