@@ -17,11 +17,21 @@
             </li>
         {{/hasPrevious}}
         {{#hasContent}}
-            {{#pageIndexes}}
+            {{#beforePageIndexes}}
                 <li class="page-item">
                     <a class="page-link" href="?page={{first}}">{{second}}</a>
                 </li>
-            {{/pageIndexes}}
+            {{/beforePageIndexes}}
+            {{#curPageIndex}}
+                <li class="page-item">
+                    <a class="page-link text-decoration-underline" href="?page={{first}}">{{second}}</a>
+                </li>
+            {{/curPageIndex}}
+            {{#afterPageIndexes}}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{first}}">{{second}}</a>
+                </li>
+            {{/afterPageIndexes}}
         {{/hasContent}}
         {{^hasContent}}
             <li class="page-item disabled">

@@ -37,8 +37,13 @@ public class SimplePageDto<T extends Page> {
     private Sort sort = null;
     private String mapingUrl ="";
 
+    //하단에 노출할 page들의 갯수.
+    private final int pageLength = 5;
+
     //html 에서 노출되는 page는 인간친화적으로 1부터 보여주되 url page 요청은 idx 기반으로 요청할 수 있도록 pair를 활용[mustache 가 logicless라서...]
-    private ArrayList<Pair<Integer, Integer>> pageIndexes = new ArrayList<>();
+    private ArrayList<Pair<Integer, Integer>> beforePageIndexes = new ArrayList<>();
+    private Pair<Integer, Integer> curPageIndex = Pair.of(0, 0);
+    private ArrayList<Pair<Integer, Integer>> afterPageIndexes = new ArrayList<>();
 
     public SimplePageDto(T page)
     {
@@ -52,26 +57,42 @@ public class SimplePageDto<T extends Page> {
         this.hasNext = page.hasNext();
         this.hasPrevious = page.hasPrevious();
         
+
+        this.curPageIndex = Pair.of(page.getNumber(), page.getNumber()+1);
+
+        this.sort = page.getSort();
+
+        int pageIdxStart = (page.getNumber() / pageLength) * pageLength;
+        int pageIdxEnd = 0;
+        if(this.hasContent)
+        {
+            for(int delta = 0; delta + pageIdxStart < page.getNumber(); ++delta)
+            {
+                int curPageIdx = delta+pageIdxStart;
+                beforePageIndexes.add(Pair.of(curPageIdx, curPageIdx+1));
+            }
+
+            for(int delta = 1; delta+page.getNumber() < pageIdxStart+pageLength; delta++)
+            {
+                int curPageIdx = delta + page.getNumber();
+                if(curPageIdx >= totalPages)
+                {
+                    break;
+                }
+                pageIdxEnd = curPageIdx;
+                afterPageIndexes.add(Pair.of(curPageIdx, curPageIdx + 1));
+            }
+        }
         if(this.hasPrevious)
         {
-            this.previousOrFirstPageIdx = page.previousOrFirstPageable().getPageNumber();
+            this.previousOrFirstPageIdx = pageIdxStart;
             this.previousPageIdx = page.previousPageable().getPageNumber();
         }
         if(this.hasNext)
         {
             this.nextPageIdx = page.nextPageable().getPageNumber();
-            this.nextOrLastPageIdx = page.nextOrLastPageable().getPageNumber();
+            this.nextOrLastPageIdx = pageIdxEnd;
         }
 
-        this.sort = page.getSort();
-
-        if(this.hasContent)
-        {
-            int pageBarStartIdx = ((int)(this.number/this.size));
-            for(int idx = pageBarStartIdx; idx < pageBarStartIdx+this.size; idx++)
-            {
-                pageIndexes.add(Pair.of(idx, idx+1));
-            }
-        }
     }
 }
