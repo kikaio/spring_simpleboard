@@ -14,6 +14,9 @@ import com.example.simpleboard.entity.Post;
 public interface CommentRepository extends JpaRepository<Comment, Long>{
 
     @Override
+    public List<Comment> findAll();
+
+    @Override
     public Page<Comment> findAll(Pageable pageable);
 
     public Page<Comment> findByPost(Post post, Pageable pageable);

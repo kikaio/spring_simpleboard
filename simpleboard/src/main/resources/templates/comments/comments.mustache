@@ -12,13 +12,16 @@
                     <span class="input-group-text" id="inputGroup-sizing-sm">제목</span>
                     <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" readonly value="{{postTitle}}">
                     <button class ="btn btn-info" type="text" onclick="location.href='/posts/{{postId}}?board_id={{boardId}}'">게시글로 이동</button>
-                    </div>
+                </div>
                 <div class="row justify-content-start">
                     {{#comments}}
                     {{>comments/comment_partial}}
                     {{/comments}}
                 </div>
             {{/commentContainer}}
+            {{#pageDto}}
+                {{>layouts/simple_pagination}}
+            {{/pageDto}}
             </div>
         </div>
         {{>partials/footer_partial}}

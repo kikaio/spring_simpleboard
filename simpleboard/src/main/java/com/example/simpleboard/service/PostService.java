@@ -2,6 +2,8 @@ package com.example.simpleboard.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.simpleboard.entity.Board;
@@ -21,14 +23,19 @@ public class PostService {
         this.postRepository = postRepository;
     }
 
-    public List<Post> getPosts()
+    public Page<Post> getPosts(Pageable pageable)
+    {
+        return postRepository.findAll(pageable);
+    }
+
+    public List<Post> getAllPosts()
     {
         return postRepository.findAll();
     }
 
-    public List<Post> getPostsUsingBoard(Board board)
+    public Page<Post> getPostsUsingBoard(Board board, Pageable pageable)
     {
-        return postRepository.findByBoard(board);
+        return postRepository.findByBoard(board, pageable);
     }
 
     public boolean createPost(Post newPost)

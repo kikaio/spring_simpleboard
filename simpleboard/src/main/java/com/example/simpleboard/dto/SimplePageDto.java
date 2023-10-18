@@ -3,7 +3,6 @@ package com.example.simpleboard.dto;
 import java.util.ArrayList;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
@@ -66,11 +65,13 @@ public class SimplePageDto<T extends Page> {
 
         this.sort = page.getSort();
 
-        int pageBarStartIdx = ((int)(this.number/this.size));
-        for(int idx = pageBarStartIdx; idx < pageBarStartIdx+this.size; idx++)
+        if(this.hasContent)
         {
-            pageIndexes.add(Pair.of(idx, idx+1));
+            int pageBarStartIdx = ((int)(this.number/this.size));
+            for(int idx = pageBarStartIdx; idx < pageBarStartIdx+this.size; idx++)
+            {
+                pageIndexes.add(Pair.of(idx, idx+1));
+            }
         }
-
     }
 }

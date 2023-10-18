@@ -2,6 +2,7 @@ package com.example.simpleboard.controller;
 
 import java.util.ArrayList;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.simpleboard.dto.RoleDto;
+import com.example.simpleboard.dto.SimplePageDto;
 import com.example.simpleboard.service.RoleService;
 
 @Controller
@@ -23,22 +25,43 @@ public class RoleController {
     
     private final RoleService roleService;
 
+    private static final int cntPerPage = 5;
+    private static int testCaseCnt = 0;
     public RoleController(RoleService roleService)
     {
         this.roleService = roleService;
     }
 
-    @GetMapping("")
-    public String getRoles(Model model)
+    @GetMapping("/test")
+    public String test()
     {
-        var roles = roleService.getAllRoles();
-        var roleDtos = new ArrayList<RoleDto>();
-        roles.forEach(ele->{
-            var dto = new RoleDto(ele);
-            roleDtos.add(dto);
-        });
+        int testCnt = 11;
+        for(int idx = 0; idx < testCnt; ++idx)
+        {
+            roleService.createRole(
+                new RoleDto(null
+                        , "role_test_%d".formatted(idx + testCaseCnt)
+                        , "role desc for %d".formatted(idx+testCaseCnt)
+                    )
+                    .toEntity()
+            );
+        }
+        testCaseCnt += testCnt;
+        return "redirect:/roles";
+    }
 
-        model.addAttribute("roles", roleDtos);
+    @GetMapping("")
+    public String getRoles(
+        @RequestParam(name="page", defaultValue = "0") int pageIdx
+        , Model model
+    )
+    {
+        var pageable = PageRequest.of(pageIdx, cntPerPage);
+        var roles = roleService.getAllRoles(pageable);
+        var pagedRoleDtos = roles.map(entity-> new RoleDto(entity));
+        var pageDto = new SimplePageDto<>(pagedRoleDtos);
+        model.addAttribute("roles", pagedRoleDtos.getContent());
+        model.addAttribute("pageDto", pageDto);
         return "/roles/roles";
     }
 

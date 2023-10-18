@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.naming.NameNotFoundException;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.example.simpleboard.dto.BoardDto;
 import com.example.simpleboard.dto.PostDto;
+import com.example.simpleboard.dto.SimplePageDto;
 import com.example.simpleboard.entity.Board;
 import com.example.simpleboard.service.BoardService;
 import com.example.simpleboard.service.PostService;
@@ -33,6 +35,8 @@ public class BoardController {
 
     private final BoardService boardService;
     private final PostService postService;
+
+    private static int cntPerPage = 5;
 
     public BoardController(
         BoardService boardService
@@ -68,24 +72,31 @@ public class BoardController {
     @GetMapping("/{id}")
     public String getBoard(
         @PathVariable(name = "id", required = true) long id
+        , @RequestParam(name="page", defaultValue = "0") int pageIdx
         , Model model
         ) throws Exception
     {
         //todo : get board, post, etc using DTO
         Board target = boardService.getBoard(id);
         if(target == null)
+        {
             throw new Exception("not exist board[%d].".formatted(id));
-
+        }
+        var pageable = PageRequest.of(pageIdx, cntPerPage);
         BoardDto targetDto = new BoardDto(target);
         model.addAttribute("board", targetDto);
         //todo : model include posts.
         List<PostDto> postsDto = new ArrayList<>();
-        var posts = postService.getPostsUsingBoard(target);
+        var posts = postService.getPostsUsingBoard(target, pageable);
+        var pagedDtos = posts.map(entity-> new PostDto(entity));
+        var pageDto = new SimplePageDto<>(pagedDtos);
         for(var post : posts)
         {
             postsDto.add(new PostDto(post));
         }
-        model.addAttribute("posts", postsDto);
+        model.addAttribute("posts", pagedDtos.toList());
+        model.addAttribute("pageDto", pageDto);
+
         return "boards/board";
     }
 

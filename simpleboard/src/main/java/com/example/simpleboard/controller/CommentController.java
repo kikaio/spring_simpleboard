@@ -3,6 +3,7 @@ package com.example.simpleboard.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -18,10 +19,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.simpleboard.dto.CommentDto;
 import com.example.simpleboard.dto.CommentListDto;
-import com.example.simpleboard.entity.Board;
+import com.example.simpleboard.dto.SimplePageDto;
 import com.example.simpleboard.entity.Comment;
 import com.example.simpleboard.entity.Post;
-import com.example.simpleboard.service.BoardService;
 import com.example.simpleboard.service.CommentService;
 import com.example.simpleboard.service.PostService;
 
@@ -34,14 +34,13 @@ public class CommentController
 {
     private final PostService postService;
     private final CommentService commentService;
-    private final BoardService boardService;
+
+    private final int cntPerPage = 5;
 
     public CommentController(
-        BoardService boardService,
         PostService postService, CommentService commentService
     )
     {
-        this.boardService = boardService;
         this.postService = postService;
         this.commentService = commentService;
     }
@@ -49,7 +48,7 @@ public class CommentController
     @GetMapping("/test")
     public String test()
     {
-        var posts = postService.getPosts();
+        var posts = postService.getAllPosts();
         posts.forEach(post->{
             var boardId = post.getBoard().getId();
             var postId = post.getId();
@@ -66,10 +65,15 @@ public class CommentController
     }
 
     @GetMapping("")
-    public String getAllComments(Model model)
+    public String getAllComments(
+        @RequestParam(name="page", defaultValue = "0") int pageIdx
+        , Model model
+        )
     {
-        var comments = commentService.getComments();
-        var commentDtos = CommentDto.calcCommentsChilds(comments, true);
+        var pageable = PageRequest.of(pageIdx, cntPerPage);
+        var comments = commentService.getComments(pageable);
+        var pageDto = new SimplePageDto<>(comments);
+        var commentDtos = CommentDto.calcCommentsChilds(comments.toList(), true);
         HashMap<Long, Pair<Long, String>> cacheMap = new HashMap<>();
         HashMap<Long, ArrayList<CommentDto>> commentDtoCache = new HashMap<>();
 
@@ -103,6 +107,7 @@ public class CommentController
         });
 
         model.addAttribute("commentContainer", retModel);
+        model.addAttribute("pageDto", pageDto);
         return "/comments/comments";
     }
 

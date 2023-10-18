@@ -6,7 +6,6 @@ import java.util.Set;
 
 import org.hibernate.annotations.ColumnDefault;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

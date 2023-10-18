@@ -1,12 +1,8 @@
 package com.example.simpleboard.controller;
 
-import java.util.ArrayList;
 
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.jaxb.PageAdapter;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,8 +34,7 @@ public class PostController {
     private final BoardService boardService;
     private final CommentService commentService;
 
-    private static final int cntPerPage = 3;
-    private static final int pageBarCnt = 10;
+    private static final int cntPerPage = 5;
 
 
     public PostController(
@@ -74,18 +69,18 @@ public class PostController {
 
     @GetMapping("")
     public String getPosts(
-        Model model
+        @RequestParam(name="page", defaultValue = "0") int pageIdx
+        , Model model
     ) throws Exception
     {
         //all post get.
-        var posts = postService.getPosts();
-        ArrayList<PostDto> postsDtos = new ArrayList<>();
-
-        posts.forEach(entity->{
-            postsDtos.add(new PostDto(entity));
-        });
+        var pageable = PageRequest.of(pageIdx, cntPerPage);
         
-        model.addAttribute("posts", postsDtos);
+        var posts = postService.getPosts(pageable);
+        var postsDtos = posts.map(ele->new PostDto(ele));
+        var pageDto = new SimplePageDto<Page>(postsDtos);
+        model.addAttribute("posts", postsDtos.toList());
+        model.addAttribute("pageDto", pageDto);
         return "/posts/posts";
     }
 

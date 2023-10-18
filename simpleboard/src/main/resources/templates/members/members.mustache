@@ -41,6 +41,11 @@
                     <tbody>
                 </table>
             </div>
+            <div class="container-fluid">
+                {{#pageDto}}
+                    {{>layouts/simple_pagination}}
+                {{/pageDto}}
+            </div>
         </div>
         <script>
         function doDelete(id)

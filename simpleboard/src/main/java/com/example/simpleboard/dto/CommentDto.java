@@ -124,7 +124,10 @@ public class CommentDto {
                 parentMap.put(parentId, parent);
                 parentComment = parent;
             }
-            parentComment.addChild(dto);
+            if(parentComment != null)
+            {
+                parentComment.addChild(dto);
+            }
         });
 
         parentMap.forEach((key, dto)->{

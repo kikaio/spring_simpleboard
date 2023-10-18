@@ -2,6 +2,7 @@ package com.example.simpleboard.controller;
 
 import java.util.ArrayList;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.simpleboard.dto.PrivilegeDto;
+import com.example.simpleboard.dto.SimplePageDto;
 import com.example.simpleboard.service.PrivilegeService;
 
 @Controller
@@ -22,21 +24,45 @@ import com.example.simpleboard.service.PrivilegeService;
 public class PrivilegeController {
     
     private final PrivilegeService privilegeService;
+    private static final int cntPerPage = 3;
+
+    private static int curTestCnt = 0;
 
     public PrivilegeController(PrivilegeService privilegeService)
     {
         this.privilegeService = privilegeService;
     }
 
-    @GetMapping("")
-    public String getAllPrivileges(Model model)
+    @GetMapping("/test")
+    public String test()
     {
-        var privileges = privilegeService.getAllPrivileges();
-        var privilegeDtos = new ArrayList<PrivilegeDto>();
-        privileges.forEach(entity->{
-            privilegeDtos.add(new PrivilegeDto(entity));
-        });
+        int testLoopCnt = 13;
+        for(int idx = 0; idx < testLoopCnt; idx++)
+        {
+            privilegeService.createPrivilege(
+                new PrivilegeDto(
+                    null, "privilege_name_%d".formatted(idx+curTestCnt), "desc for privilege_%d".formatted(idx+curTestCnt)
+                ).toEntity()
+            );
+        }
+        curTestCnt+= testLoopCnt;
+        return "redirect:/privileges";
+    }
+
+    @GetMapping("")
+    public String getAllPrivileges(
+        @RequestParam(name="page", defaultValue = "0")int pageIdx
+        , Model model
+    )
+    {
+        var pageable = PageRequest.of(pageIdx, cntPerPage);
+
+        var privileges = privilegeService.getAllPrivileges(pageable);
+        var privilegeDtos = privileges.map(entity-> new PrivilegeDto(entity));
+        var pageDto = new SimplePageDto<>(privilegeDtos);
+
         model.addAttribute("privileges",privilegeDtos);
+        model.addAttribute("pageDto", pageDto);
         return "/privileges/privileges";
     }
 

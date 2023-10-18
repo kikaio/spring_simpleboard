@@ -26,6 +26,11 @@ public class CommentService {
         return commentRepository.findAll();
     }
 
+    public Page<Comment> getComments(Pageable pageable)
+    {
+        return commentRepository.findAll(pageable);
+    }
+
     public Page<Comment> getCommentsUsingPost(Post post, Pageable pageable)
     {
         return commentRepository.findByPost(post, pageable);

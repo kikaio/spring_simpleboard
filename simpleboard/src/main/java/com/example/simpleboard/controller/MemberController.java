@@ -1,7 +1,7 @@
 package com.example.simpleboard.controller;
 
-import java.util.ArrayList;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.simpleboard.dto.MemberDto;
+import com.example.simpleboard.dto.SimplePageDto;
 import com.example.simpleboard.entity.Member;
 import com.example.simpleboard.service.SimpleUserDetailsService;
 
@@ -25,6 +26,8 @@ public class MemberController
 {
     private final SimpleUserDetailsService simpleUserDetailsService;
 
+    private static final int cntPerPage = 10;
+    private static int testedMemberCnt = 0;
     public MemberController(SimpleUserDetailsService simpleUserDetailsService)
     {
         this.simpleUserDetailsService = simpleUserDetailsService;
@@ -33,24 +36,33 @@ public class MemberController
     @GetMapping("/test")
     public String test()
     {
-        Member admin = Member.builder()
-            .email("root")
-            .password("1234")
-            .build()
-        ;
-        simpleUserDetailsService.createMember(admin);
+        int testMemberCnt = 27;
+        for(int idx = 0; idx < testMemberCnt; ++idx)
+        {
+            Member admin = Member.builder()
+                .email("test_member_%d".formatted(idx+1 + testedMemberCnt))
+                .password("1234")
+                .build()
+            ;
+            simpleUserDetailsService.createMember(admin);
+        }
+        testedMemberCnt += testMemberCnt;
+        
         return "redirect:/members";
     }
 
     @GetMapping("")
-    public String getMembers(Model model)
+    public String getMembers(
+        @RequestParam(name="page", defaultValue = "0") int pageIdx
+        , Model model
+    )
     {
-        var members = simpleUserDetailsService.getMembers();
-        var memberDtos = new ArrayList<MemberDto>();
-        members.forEach(ele->{
-            memberDtos.add(new MemberDto(ele));
-        });
-        model.addAttribute("members", memberDtos);
+        var pageable = PageRequest.of(pageIdx, cntPerPage);
+        var members = simpleUserDetailsService.getMembers(pageable);
+        var pageMemberDtos = members.map(entity-> new MemberDto(entity));
+        var pageDto = new SimplePageDto<Page>(pageMemberDtos);
+        model.addAttribute("members", pageMemberDtos.getContent());
+        model.addAttribute("pageDto", pageDto);
         return "/members/members";
     }
 

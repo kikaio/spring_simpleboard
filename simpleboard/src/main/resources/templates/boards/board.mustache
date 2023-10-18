@@ -40,6 +40,11 @@
                 </tbody>
             </table>
             </div>
+            <div class = "container-fluid">
+                {{#pageDto}}
+                    {{>layouts/simple_pagination}}
+                {{/pageDto}}
+            </div>
         </div>
         <script>
         function doPostDelete(num_id)

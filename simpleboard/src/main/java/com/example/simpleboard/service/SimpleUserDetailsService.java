@@ -3,10 +3,12 @@ package com.example.simpleboard.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -96,12 +98,12 @@ public class SimpleUserDetailsService implements UserDetailsService
         }
     }
 
-    public List<Member> getMembers()
+    public Page<Member> getMembers(Pageable pageable)
     {
         try {
-            return memberRepository.findAll();
+            return memberRepository.findAll(pageable);
         } catch (Exception e) {
-            return new ArrayList<>();
+            return new PageImpl<Member>(new ArrayList<Member>());
         }
     }
 

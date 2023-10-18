@@ -2,6 +2,8 @@ package com.example.simpleboard.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.simpleboard.entity.Role;
@@ -26,9 +28,9 @@ public class RoleService {
         return true;
     }
 
-    public List<Role> getAllRoles()
+    public Page<Role> getAllRoles(Pageable pageable)
     {
-        return roleRepository.findAll();
+        return roleRepository.findAll(pageable);
     }
 
     public Role getRole(Long id)

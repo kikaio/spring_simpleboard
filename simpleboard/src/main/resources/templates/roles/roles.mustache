@@ -38,6 +38,11 @@
                         {{/roles}}
                     </tbody>
                 </table>
+                <div class="container-fluid">
+                    {{#pageDto}}
+                        {{>layouts/simple_pagination}}
+                    {{/pageDto}}
+                </div>
             </div>
         </div>
         <script>

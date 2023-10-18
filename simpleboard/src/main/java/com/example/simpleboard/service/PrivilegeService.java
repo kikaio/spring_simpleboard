@@ -1,7 +1,7 @@
 package com.example.simpleboard.service;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.simpleboard.entity.Privilege;
@@ -17,10 +17,10 @@ public class PrivilegeService {
         this.privilegeRepository = privilegeRepository;
     }
 
-    public List<Privilege> getAllPrivileges()
+    public Page<Privilege> getAllPrivileges(Pageable pageable)
     {
         try {
-            return privilegeRepository.findAll();
+            return privilegeRepository.findAll(pageable);
         } catch (Exception e) {
             return null;
         }
