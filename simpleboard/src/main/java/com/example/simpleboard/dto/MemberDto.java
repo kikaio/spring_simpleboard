@@ -1,5 +1,7 @@
 package com.example.simpleboard.dto;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.example.simpleboard.entity.Member;
@@ -27,13 +29,23 @@ public class MemberDto {
 
     private boolean enabled = true;
     private boolean expired = false;
-    private boolean locked = true; // todo : 추후 이메일 인증 로직 통과 후 false로 바꿀 예정.
+    private boolean locked = false; // todo : 추후 이메일 인증 로직 통과 후 false로 바꿀 예정.
 
     public MemberDto(Member entity)
     {
         fromEntity(entity);
     }
     
+    public void doPasswordEncrypt()
+    {
+        this.doPasswordEncrypt(new BCryptPasswordEncoder());
+    }
+
+    public void doPasswordEncrypt(PasswordEncoder encoder)
+    {
+        password = encoder.encode(password);
+    }
+
     public void fromEntity(Member entity)
     {
         if(entity == null)

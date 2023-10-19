@@ -19,6 +19,8 @@ import com.example.simpleboard.entity.Member;
 import com.example.simpleboard.entity.Role;
 import com.example.simpleboard.repository.MemberRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class SimpleUserDetailsService implements UserDetailsService
 {
@@ -69,6 +71,8 @@ public class SimpleUserDetailsService implements UserDetailsService
         return roleGrants;
     }
 
+
+    @Transactional
     public boolean createMember(String email, String  password)
     {
         Member member = Member.builder()
@@ -88,6 +92,7 @@ public class SimpleUserDetailsService implements UserDetailsService
         }
     }
 
+    @Transactional
     public boolean createMember(Member member)
     {
         try {

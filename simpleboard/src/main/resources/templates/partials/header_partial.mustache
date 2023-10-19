@@ -73,8 +73,12 @@
             {{/username}}
             {{^username}}
                 <div>
-                    <button class="btn btn-outline-success me-2 active" onclick="location.href='/member/sign-up'" type="button">Sign-up</button>
-                    <button class="btn btn-outline-success me-2" onclick="location.href='/member/sign-in'" type="button">Sign-in</button>
+                    {{^isSignUpNow}}
+                        <button class="btn btn-outline-success me-2 active" onclick="location.href='/sign/sign-up'" type="button">Sign-up</button>
+                    {{/isSignUpNow}}
+                    {{^isSignInNow}}
+                        <button class="btn btn-outline-success me-2" onclick="location.href='/sign/sign-in'" type="button">Sign-in</button>
+                    {{/isSignInNow}}
                 </div>
             {{/username}}
         </form>
