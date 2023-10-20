@@ -1,21 +1,30 @@
 package com.example.simpleboard.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
+import com.example.simpleboard.service.SimpleUserDetailsService;
+
 import jakarta.servlet.DispatcherType;
 
 @Configuration
 @EnableMethodSecurity
 public class BoardSecurityConfig {
+
+    @Autowired
+    private SimpleUserDetailsService simpleUserDetailsService;
 
     @Bean
     public PasswordEncoder getPasswordEncoder()
@@ -41,6 +50,7 @@ public class BoardSecurityConfig {
         final String loginIdParam = "email";
         final String loginPasswordParam = "password";
 
+
         final MvcRequestMatcher[] signMatchers = {
             new MvcRequestMatcher(introspector, signInUrl)
             , new MvcRequestMatcher(introspector, signInProcessUrl)
@@ -63,12 +73,13 @@ public class BoardSecurityConfig {
         .cors(custom->{ custom.disable();})
         .formLogin(custom->{
             custom.loginPage(signInUrl)
-//                .loginProcessingUrl(signInProcessUrl)
+               .loginProcessingUrl(signInProcessUrl)
                 .usernameParameter(loginIdParam)
                 .passwordParameter(loginPasswordParam)
-                .failureUrl(signInFailureUrl)
+               .failureUrl(signInFailureUrl)
             ;
         })
+        .userDetailsService(simpleUserDetailsService)
         .logout(custom->{
             custom.logoutUrl(signOutUrl)
                 .logoutSuccessUrl(signOutSuccessUrl)
@@ -85,11 +96,16 @@ public class BoardSecurityConfig {
         return http.build();
     }
 
-    @Bean
-    @Order(1)
-    public SecurityFilterChain exceptSecurityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception
+    @Bean 
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception
     {
-        final String staticCssResourcesPath = "/css/**";
+        return config.getAuthenticationManager();
+    } 
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer(HandlerMappingIntrospector introspector)
+    {
+         final String staticCssResourcesPath = "/css/**";
         final String staticImagesResourcesPath = "/images/**";
         final String staticScriptsResourcesPath = "/js/**";
         final String faviconResourcePath = "/favicon.ico";
@@ -103,27 +119,50 @@ public class BoardSecurityConfig {
             , new MvcRequestMatcher(introspector, faviconResourcePath)
             , new MvcRequestMatcher(introspector, h2SConsoleUrl)
         };
-
-        http
-        .csrf(custom->{ custom.disable();})
-        .cors(custom->{ custom.disable();})
-        .authorizeHttpRequests(custom->{
-            custom
-                .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
-                .requestMatchers(publicMatchers).permitAll()
-                .anyRequest().permitAll()
-            ;
-        })
-        .requestCache(custom->{
-            custom.disable();
-        })
-        .securityContext(custom->{
-            custom.disable();
-        })
-        .sessionManagement(custom->{
-            custom.disable();
-        })
-        ;
-        return http.build();
+        return (web)->{
+            web.ignoring().requestMatchers(publicMatchers);
+        };
     }
+
+    // @Bean
+    // @Order(1)
+    // public SecurityFilterChain exceptSecurityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception
+    // {
+    //     final String staticCssResourcesPath = "/css/**";
+    //     final String staticImagesResourcesPath = "/images/**";
+    //     final String staticScriptsResourcesPath = "/js/**";
+    //     final String faviconResourcePath = "/favicon.ico";
+    //     final String h2SConsoleUrl = "/h2-console/**";
+    //     //참고 블로그 : https://bitgadak.tistory.com/11
+    //     //web ignore 역할 filter chain 추가 하면서 불필요한 filter는 disable 처리.
+    //     final MvcRequestMatcher[] publicMatchers = {
+    //         new MvcRequestMatcher(introspector, staticCssResourcesPath)
+    //         , new MvcRequestMatcher(introspector, staticImagesResourcesPath)
+    //         , new MvcRequestMatcher(introspector, staticScriptsResourcesPath)
+    //         , new MvcRequestMatcher(introspector, faviconResourcePath)
+    //         , new MvcRequestMatcher(introspector, h2SConsoleUrl)
+    //     };
+
+    //     http
+    //     .csrf(custom->{ custom.disable();})
+    //     .cors(custom->{ custom.disable();})
+    //     .authorizeHttpRequests(custom->{
+    //         custom
+    //             .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
+    //             .requestMatchers(publicMatchers).permitAll()
+    //             .anyRequest().permitAll()
+    //         ;
+    //     })
+    //     .requestCache(custom->{
+    //         custom.disable();
+    //     })
+    //     .securityContext(custom->{
+    //         custom.disable();
+    //     })
+    //     .sessionManagement(custom->{
+    //         custom.disable();
+    //     })
+    //     ;
+    //     return http.build();
+    // }
 }

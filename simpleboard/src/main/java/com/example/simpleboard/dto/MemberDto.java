@@ -1,7 +1,5 @@
 package com.example.simpleboard.dto;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.example.simpleboard.entity.Member;
@@ -36,16 +34,6 @@ public class MemberDto {
         fromEntity(entity);
     }
     
-    public void doPasswordEncrypt()
-    {
-        this.doPasswordEncrypt(new BCryptPasswordEncoder());
-    }
-
-    public void doPasswordEncrypt(PasswordEncoder encoder)
-    {
-        password = encoder.encode(password);
-    }
-
     public void fromEntity(Member entity)
     {
         if(entity == null)

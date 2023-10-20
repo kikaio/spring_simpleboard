@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.simpleboard.entity.Member;
@@ -25,12 +27,10 @@ import jakarta.transaction.Transactional;
 public class SimpleUserDetailsService implements UserDetailsService
 {
 
-    private final MemberRepository memberRepository;
+    @Autowired
+    private MemberRepository memberRepository;
 
-    public SimpleUserDetailsService(MemberRepository memberRepository)
-    {
-        this.memberRepository = memberRepository;
-    }
+    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
@@ -75,6 +75,7 @@ public class SimpleUserDetailsService implements UserDetailsService
     @Transactional
     public boolean createMember(String email, String  password)
     {
+        password = passwordEncoder.encode(password);
         Member member = Member.builder()
             .email(email)
             .password(password)
@@ -170,6 +171,11 @@ public class SimpleUserDetailsService implements UserDetailsService
         }
         return true;
     }    
+
+    public boolean passwordCheck(String rawPassword, String encryptedPassword)
+    {
+        return passwordEncoder.matches(rawPassword, encryptedPassword);
+    }
 
     public boolean validCheckCreateMember(Member member)
     {

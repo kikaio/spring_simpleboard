@@ -57,20 +57,22 @@ public class SignController
             return "redirect:/sign/sign-up-failed";
         }
         log.info("sign up password : %s".formatted(memberDto.getPassword()));
-        memberDto.doPasswordEncrypt();
-        log.info("sign up encrypted password : %s".formatted(memberDto.getPassword()));
+        var passwordEncoder = new BCryptPasswordEncoder();
+        memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword()));
+        log.info("sign up password : %s".formatted(memberDto.getPassword()));
         var newMember = memberDto.toEntity();
         if(simpleUserDetailsService.validCheckCreateMember(newMember) == false)
         {
             reAttr.addFlashAttribute("errorMsg", "failed : member data invalid. please check again");
             return "redirect:/sign/sign-up-failed";
         }
-
+        
         if(simpleUserDetailsService.createMember(newMember) == false)
         {
             reAttr.addFlashAttribute("errorMsg", "failed : member data save failed. please check again");
             return "redirect:/sign/sign-up-failed";
         }
+        
         return "redirect:/sign/sign-up-success";
     }
 
@@ -96,18 +98,16 @@ public class SignController
     }
 
     //실제  form login 의 요청을 처리하는 곳.
-    @PostMapping("sign-in-process")
+//    @PostMapping("sign-in-process")
     public String signInProcess(MemberDto tryMember, RedirectAttributes reAttr)
     {
         String email = tryMember.getEmail();
         log.info("password : %s".formatted(tryMember.getPassword()));
-        tryMember.doPasswordEncrypt();
-        log.info("encrypted password : %s".formatted(tryMember.getPassword()));
         String password = tryMember.getPassword();
         try {
             var userDetails = simpleUserDetailsService.loadUserByUsername(email);
             log.info("user details password : %s".formatted(userDetails.getPassword()));
-            if(userDetails == null || userDetails.getPassword() != password)
+            if(userDetails == null || simpleUserDetailsService.passwordCheck(password, userDetails.getPassword()) == false)
             {
                 reAttr.addFlashAttribute("errorMge", "not exist user or invalid password. check again please");
                 return "redirect:/sign/sign-in-failed";
