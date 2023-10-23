@@ -12,9 +12,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
+import com.example.simpleboard.entity.Member;
 import com.example.simpleboard.service.SimpleUserDetailsService;
 
 import jakarta.servlet.DispatcherType;
@@ -51,6 +53,8 @@ public class BoardSecurityConfig {
         final String loginPasswordParam = "password";
 
 
+        final String signTestUrl = "/sign/test";
+
         final MvcRequestMatcher[] signMatchers = {
             new MvcRequestMatcher(introspector, signInUrl)
             , new MvcRequestMatcher(introspector, signInProcessUrl)
@@ -62,6 +66,7 @@ public class BoardSecurityConfig {
             , new MvcRequestMatcher(introspector, signUpSuccessUrl)
             , new MvcRequestMatcher(introspector, signOutUrl)
             , new MvcRequestMatcher(introspector, signOutSuccessUrl)
+            , new MvcRequestMatcher(introspector, signTestUrl)
         };
 
         final MvcRequestMatcher[] publicMatchers = {
@@ -76,7 +81,14 @@ public class BoardSecurityConfig {
                .loginProcessingUrl(signInProcessUrl)
                 .usernameParameter(loginIdParam)
                 .passwordParameter(loginPasswordParam)
-               .failureUrl(signInFailureUrl)
+                .failureUrl(signInFailureUrl)
+                .successHandler((request, response, authentication) -> {
+                    var user = (Member)authentication.getPrincipal();
+                    var session = request.getSession();
+                    session.setAttribute("username", user.getUsername());
+                    session.setAttribute("user", user);
+                    response.sendRedirect(signInSuccessUrl);
+                })
             ;
         })
         .userDetailsService(simpleUserDetailsService)

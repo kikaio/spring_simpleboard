@@ -46,6 +46,7 @@
                 ForTest
             </a>
             <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/sign/test">test sign</a></li>
                 <li><a class="dropdown-item" href="/members/test">test member</a></li>
                 <li><a class="dropdown-item" href="/roles/test">test role</a></li>
                 <li><a class="dropdown-item" href="/privileges/test">test privilege</a></li>
@@ -63,15 +64,17 @@
             </li>
         </ul>
         <form class="justify-content-start">
-            {{#username}}
+            {{#user}}
             <div>
-                <button class="btn btn-outline-success me-2" onclick="location.href='/member/profile?id={{member.id}}'" type="button">Profile</button>
-                <form action="" method="POST">
-                    <button class="btn btn-outline-success me-2" onclick="location.href='/member/sign-out'" type="button">Sign-out</button>
+                <label>hello, {{user.username}}</label>
+                <form>
+                    <input type="hidden" name="id" value = "{{user.id}}">
+                    <input class="btn btn-outline-success me-2" type="submit" value="Profile">
                 </form>
+                <button class="btn btn-outline-success me-2" onclick="location.href='/sign/sign-out'" type="button">Sign-out</button>
             </div>
-            {{/username}}
-            {{^username}}
+            {{/user}}
+            {{^user}}
                 <div>
                     {{^isSignUpNow}}
                         <button class="btn btn-outline-success me-2 active" onclick="location.href='/sign/sign-up'" type="button">Sign-up</button>
@@ -80,10 +83,10 @@
                         <button class="btn btn-outline-success me-2" onclick="location.href='/sign/sign-in'" type="button">Sign-in</button>
                     {{/isSignInNow}}
                 </div>
-            {{/username}}
+            {{/user}}
         </form>
         </div>
     </div>
+    <script src="/js/simple_script.js"></script>
     </nav>
-
 </header>

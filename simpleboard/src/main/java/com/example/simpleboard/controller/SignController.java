@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -12,6 +13,8 @@ import com.example.simpleboard.dto.MemberDto;
 import com.example.simpleboard.service.SimpleUserDetailsService;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
 @RequestMapping("/sign/")
@@ -24,6 +27,20 @@ public class SignController
     {
         this.simpleUserDetailsService = simpleUserDetailsService;
     }
+
+    @GetMapping(value="/test")
+    public String test() 
+    {
+        String email = "admin@admin.com";
+        String pw_plane = "1234";
+        var pwEncoder = new BCryptPasswordEncoder();
+        String pw_encoded = pwEncoder.encode(pw_plane);
+        var memberDto = new MemberDto(null, email, pw_encoded, true, false, false);
+        var member = memberDto.toEntity();
+        simpleUserDetailsService.createMember(member);
+        return "redirect:/";
+    }
+    
 
     @GetMapping("sign-up")
     public String signUpPage(Model model)
@@ -120,17 +137,5 @@ public class SignController
             reAttr.addFlashAttribute("errorMge", "not exist user or invalid password. check again please");
             return "redirect:/sign/sign-in-failed";
         }
-    }
-
-    @GetMapping("sign-out")
-    public String signOutPage()
-    {
-        return "";
-    }
-
-    @GetMapping("sign-out-process")
-    public String signOutProcess()
-    {
-        return "";
     }
 }
