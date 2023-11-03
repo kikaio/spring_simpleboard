@@ -5,11 +5,13 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,17 +29,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
+@DynamicInsert
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private String name;
-
     @Column(nullable = false)
-    @ColumnDefault("")
-    private String desc;
+    @ColumnDefault("''")
+    @Builder.Default
+    private String name="";
+
+    @Column(nullable=false)
+    @ColumnDefault("''")
+    @Builder.Default
+    private String descRole = "";
 
     @ManyToMany(
         cascade = {
@@ -48,10 +54,16 @@ public class Role {
     @JoinTable(
         name = "role_privilege"
         , joinColumns = {
-            @JoinColumn(referencedColumnName = "id", name="role_id")
+            @JoinColumn(
+                referencedColumnName = "id", name="role_id"
+                , foreignKey = @ForeignKey(name="fk_roles_privileges_role_id")
+            )
         }
         , inverseJoinColumns = {
-            @JoinColumn(referencedColumnName = "id", name = "privilege_id")
+            @JoinColumn(
+                referencedColumnName = "id", name = "privilege_id"
+                , foreignKey = @ForeignKey(name="fk_roles_privileges_privilege_id")
+            )
         }
     )
     private final Set<Privilege> privileges = new HashSet<Privilege>();
@@ -98,9 +110,9 @@ public class Role {
         {
             this.name = other.getName();
         }
-        if(other.getDesc() != null)
+        if(other.getDescRole() != null)
         {
-            this.desc = other.getDesc();
+            this.descRole = other.getDescRole();
         }
 
         if(other.getPrivileges() != null)

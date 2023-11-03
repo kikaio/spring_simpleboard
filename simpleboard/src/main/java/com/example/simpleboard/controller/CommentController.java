@@ -181,11 +181,7 @@ public class CommentController
             return "";
         }
 
-        if(false)
-        {
-            //todo : author or admin check 
-            return "";
-        }
+        //todo : author or admin check 
 
         var newComment = commentDto.toEntity(post, comment.getParent());
         commentService.updateComment(newComment);

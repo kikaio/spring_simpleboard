@@ -1,6 +1,5 @@
 package com.example.simpleboard.controller;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -60,7 +59,7 @@ public class MemberController
         var pageable = PageRequest.of(pageIdx, cntPerPage);
         var members = simpleUserDetailsService.getMembers(pageable);
         var pageMemberDtos = members.map(entity-> new MemberDto(entity));
-        var pageDto = new SimplePageDto<Page>(pageMemberDtos);
+        var pageDto = new SimplePageDto<>(pageMemberDtos);
         model.addAttribute("members", pageMemberDtos.getContent());
         model.addAttribute("pageDto", pageDto);
         return "/members/members";

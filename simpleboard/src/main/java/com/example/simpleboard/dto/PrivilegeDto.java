@@ -35,7 +35,7 @@ public class PrivilegeDto {
         }
         this.id = privilege.getId();
         this.name = privilege.getName();
-        this.desc = privilege.getDesc();
+        this.desc = privilege.getDescPrivilige();
     }
 
     public Privilege toEntity()
@@ -43,7 +43,7 @@ public class PrivilegeDto {
         return Privilege.builder()
             .id(id)
             .name(name)
-            .desc(desc)
+            .descPrivilige(desc)
             .build()
         ;
     }

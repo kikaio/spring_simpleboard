@@ -6,6 +6,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -38,7 +39,10 @@ public class Post
     private String content;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "board_id", referencedColumnName = "id")
+    @JoinColumn(
+        name = "board_id", referencedColumnName = "id"
+        , foreignKey = @ForeignKey(name="fk_board_id")
+    )
     @ToString.Exclude
     @Setter
     @OnDelete(action = OnDeleteAction.CASCADE)

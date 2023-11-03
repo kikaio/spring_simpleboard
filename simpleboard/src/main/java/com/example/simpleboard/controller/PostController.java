@@ -1,7 +1,6 @@
 package com.example.simpleboard.controller;
 
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -78,7 +77,7 @@ public class PostController {
         
         var posts = postService.getPosts(pageable);
         var postsDtos = posts.map(ele->new PostDto(ele));
-        var pageDto = new SimplePageDto<Page>(postsDtos);
+        var pageDto = new SimplePageDto<>(postsDtos);
         model.addAttribute("posts", postsDtos.toList());
         model.addAttribute("pageDto", pageDto);
         return "/posts/posts";

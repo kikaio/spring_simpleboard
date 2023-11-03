@@ -7,6 +7,7 @@ import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,13 +36,19 @@ public class Comment
     private String comment;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="post_id", referencedColumnName = "id")
+    @JoinColumn(
+        name="post_id", referencedColumnName = "id"
+        , foreignKey = @ForeignKey(name="fk_post")
+    )
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private Post post;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "parent_id", referencedColumnName = "id", nullable = true, unique = false)
+    @JoinColumn(
+        name = "parent_id", referencedColumnName = "id", nullable = true, unique = false
+        , foreignKey = @ForeignKey(name="fk_parent_comment")
+    )
     @ToString.Exclude
     @OnDelete(action = OnDeleteAction.SET_NULL)
     private Comment parent;

@@ -1,7 +1,5 @@
 package com.example.simpleboard.controller;
 
-import java.util.ArrayList;
-
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;

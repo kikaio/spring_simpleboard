@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +14,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -33,6 +35,7 @@ import lombok.ToString;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @ToString
+@DynamicInsert
 public class Member implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,15 +49,18 @@ public class Member implements UserDetails{
 
     @Column
     @ColumnDefault("false")
-    private boolean expired;
+    @Builder.Default
+    private boolean expired = false;
 
     @Column
     @ColumnDefault("false")
-    private boolean locked;
+    @Builder.Default
+    private boolean locked = false;
 
     @Column
     @ColumnDefault("true")
-    private boolean enabled;
+    @Builder.Default
+    private boolean enabled = true;
 
     @ManyToMany(
         fetch = FetchType.EAGER
@@ -65,10 +71,16 @@ public class Member implements UserDetails{
     @JoinTable(
         name="member_role"
         , joinColumns = {
-            @JoinColumn(referencedColumnName = "id", name="member_id")
+            @JoinColumn(
+                referencedColumnName = "id", name="member_id"
+                , foreignKey = @ForeignKey(name="fk_members_roles_member_id")
+            )
         }
         , inverseJoinColumns = {
-            @JoinColumn(referencedColumnName = "id", name="role_id")
+            @JoinColumn(
+                referencedColumnName = "id", name="role_id"
+                , foreignKey = @ForeignKey(name="fk_members_roles_role_id")
+            )
         }
     )
     @ToString.Exclude

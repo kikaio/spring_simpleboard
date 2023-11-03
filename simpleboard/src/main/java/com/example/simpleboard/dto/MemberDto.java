@@ -25,8 +25,11 @@ public class MemberDto {
 
     private String password;
 
+    @Builder.Default
     private boolean enabled = true;
+    @Builder.Default
     private boolean expired = false;
+    @Builder.Default
     private boolean locked = false; // todo : 추후 이메일 인증 로직 통과 후 false로 바꿀 예정.
 
     public MemberDto(Member entity)

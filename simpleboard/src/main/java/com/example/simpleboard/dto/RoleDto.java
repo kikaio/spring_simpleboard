@@ -32,7 +32,7 @@ public class RoleDto {
     {
         id = role.getId();
         name = role.getName();
-        desc = role.getDesc();
+        desc = role.getDescRole();
     }
 
     public Role toEntity()
@@ -40,7 +40,7 @@ public class RoleDto {
         return Role.builder()
             .id(id)
             .name(name)
-            .desc(desc)
+            .descRole(desc)
             .build()
         ;
     }

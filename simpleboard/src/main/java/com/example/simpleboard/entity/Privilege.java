@@ -5,10 +5,12 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import lombok.AccessLevel;
@@ -22,21 +24,24 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
+@DynamicInsert
 public class Privilege {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false)
-    @ColumnDefault("")
-    private String name;
+    @ColumnDefault("''")
+    @Builder.Default
+    private String name = "";
 
     @ManyToMany(mappedBy = "privileges")
     private final Set<Role> roles = new HashSet<>();
 
     @Column(nullable = false)
-    @ColumnDefault("")
-    private String desc;
+    @ColumnDefault("''")
+    @Builder.Default
+    private String descPrivilige = "";
 
     @Override
     public boolean equals(Object other)
@@ -71,9 +76,9 @@ public class Privilege {
         {
             this.name = other.getName();
         }
-        if(other.getDesc() != null)
+        if(other.getDescPrivilige() != null)
         {
-            this.desc = other.getDesc();
+            this.descPrivilige = other.getDescPrivilige();
         }
     }
 
