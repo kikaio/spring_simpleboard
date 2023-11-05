@@ -68,10 +68,23 @@ public class BoardSecurityConfig {
             , new MvcRequestMatcher(introspector, signTestUrl)
         };
 
+        final String indexPath = "/";
+        final String staticCssResourcesPath = "/css/**";
+        final String staticImagesResourcesPath = "/images/**";
+        final String staticScriptsResourcesPath = "/js/**";
+        final String faviconResourcePath = "/favicon.ico";
+//        final String h2SConsoleUrl = "/h2-console/**";
+        //참고 블로그 : https://bitgadak.tistory.com/11
+        //web ignore 역할 filter chain 추가 하면서 불필요한 filter는 disable 처리.
         final MvcRequestMatcher[] publicMatchers = {
-            new MvcRequestMatcher(introspector, "/")
+            new MvcRequestMatcher(introspector, indexPath)
+            , new MvcRequestMatcher(introspector, staticCssResourcesPath)
+            , new MvcRequestMatcher(introspector, staticImagesResourcesPath)
+            , new MvcRequestMatcher(introspector, staticScriptsResourcesPath)
+            , new MvcRequestMatcher(introspector, faviconResourcePath)
+//            , new MvcRequestMatcher(introspector, h2SConsoleUrl)
         };
-        
+
         http
         .csrf(custom->{ custom.disable();})
         .cors(custom->{ custom.disable();})
@@ -113,27 +126,27 @@ public class BoardSecurityConfig {
         return config.getAuthenticationManager();
     } 
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer(HandlerMappingIntrospector introspector)
-    {
-         final String staticCssResourcesPath = "/css/**";
-        final String staticImagesResourcesPath = "/images/**";
-        final String staticScriptsResourcesPath = "/js/**";
-        final String faviconResourcePath = "/favicon.ico";
-        final String h2SConsoleUrl = "/h2-console/**";
-        //참고 블로그 : https://bitgadak.tistory.com/11
-        //web ignore 역할 filter chain 추가 하면서 불필요한 filter는 disable 처리.
-        final MvcRequestMatcher[] publicMatchers = {
-            new MvcRequestMatcher(introspector, staticCssResourcesPath)
-            , new MvcRequestMatcher(introspector, staticImagesResourcesPath)
-            , new MvcRequestMatcher(introspector, staticScriptsResourcesPath)
-            , new MvcRequestMatcher(introspector, faviconResourcePath)
-            , new MvcRequestMatcher(introspector, h2SConsoleUrl)
-        };
-        return (web)->{
-            web.ignoring().requestMatchers(publicMatchers);
-        };
-    }
+    // @Bean
+    // public WebSecurityCustomizer webSecurityCustomizer(HandlerMappingIntrospector introspector)
+    // {
+    //     final String staticCssResourcesPath = "/css/**";
+    //     final String staticImagesResourcesPath = "/images/**";
+    //     final String staticScriptsResourcesPath = "/js/**";
+    //     final String faviconResourcePath = "/favicon.ico";
+    //     final String h2SConsoleUrl = "/h2-console/**";
+    //     //참고 블로그 : https://bitgadak.tistory.com/11
+    //     //web ignore 역할 filter chain 추가 하면서 불필요한 filter는 disable 처리.
+    //     final MvcRequestMatcher[] publicMatchers = {
+    //         new MvcRequestMatcher(introspector, staticCssResourcesPath)
+    //         , new MvcRequestMatcher(introspector, staticImagesResourcesPath)
+    //         , new MvcRequestMatcher(introspector, staticScriptsResourcesPath)
+    //         , new MvcRequestMatcher(introspector, faviconResourcePath)
+    //         , new MvcRequestMatcher(introspector, h2SConsoleUrl)
+    //     };
+    //     return (web)->{
+    //         web.ignoring().requestMatchers(publicMatchers);
+    //     };
+    // }
 
     // @Bean
     // @Order(1)
