@@ -11,10 +11,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
+import com.example.simpleboard.config.auth.dto.CustomOAuth2UserService;
 import com.example.simpleboard.entity.Member;
 import com.example.simpleboard.service.SimpleUserDetailsService;
 
@@ -26,6 +28,9 @@ public class BoardSecurityConfig {
 
     @Autowired
     private SimpleUserDetailsService simpleUserDetailsService;
+
+    @Autowired
+    private CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public PasswordEncoder getPasswordEncoder()
@@ -116,6 +121,12 @@ public class BoardSecurityConfig {
                 .requestMatchers(publicMatchers).permitAll()
                 .anyRequest().authenticated(); //member 작업 전까진 모두 permit All 처리.
         })
+        .oauth2Login(custom->{
+            custom.userInfoEndpoint(config->{
+                config.userService((OAuth2UserService)customOAuth2UserService);
+            })
+            ;
+        })  
         ;
         return http.build();
     }

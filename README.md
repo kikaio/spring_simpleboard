@@ -16,7 +16,7 @@ spring boot로 만드는 간단한 게시판.
  . spring Security
  . visual studio code
  . git
- . H2
+ . Mysql
  . view template : mustache
 
 ================================================================
