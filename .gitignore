@@ -1,2 +1,3 @@
 simpleboard/src/main/resources/db.properties
 simpleboard/src/main/resources/jpa.properties
+simpleboard/src/main/resources/app-oauth.properties
