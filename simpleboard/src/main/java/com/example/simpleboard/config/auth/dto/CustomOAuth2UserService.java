@@ -1,8 +1,5 @@
 package com.example.simpleboard.config.auth.dto;
 
-import java.util.Collections;
-
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -13,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.simpleboard.entity.Member;
 import com.example.simpleboard.entity.Role;
+import com.example.simpleboard.enums.RoleEnums;
 import com.example.simpleboard.repository.MemberRepository;
 import com.example.simpleboard.repository.RoleRepository;
 
@@ -33,7 +31,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
+        String userNameAttributeName = userRequest.getClientRegistration()
+            .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
         OAuthAttribute attributes = OAuthAttribute.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
@@ -50,19 +49,19 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     public Member saveOrUpdate(OAuthAttribute attr)
     {
         var member = attr.toEntitywithoutRole();
-        var target = memberRepository.findByEmail(member.getEmail());
-        if(target.isPresent())
+        var target = memberRepository.findByEmail(member.getEmail()).orElse(null);
+        if(target != null)
         {
-            return target.get();
+            return target;
         }
         else
         {
-            var basicUserRole = roleRepository.findByName("User").orElse(null);
+            var basicUserRole = roleRepository.findByName(RoleEnums.ROLE_USER.name()).orElse(null);
             if(basicUserRole == null)
             {
                 var newRole = Role.builder()
-                    .name("User")
-                    .descRole("this is simple role for user")
+                    .name(RoleEnums.ROLE_USER.name())
+                    .descRole(RoleEnums.ROLE_USER.descRole)
                     .build()
                 ;
                 basicUserRole = roleRepository.save(newRole);
