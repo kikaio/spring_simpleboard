@@ -20,6 +20,8 @@ import com.example.simpleboard.config.auth.dto.CustomOAuth2UserService;
 import com.example.simpleboard.entity.Member;
 import com.example.simpleboard.service.SimpleUserDetailsService;
 
+import com.example.simpleboard.config.auth.dto.SessionUser;
+
 import jakarta.servlet.DispatcherType;
 
 @Configuration
@@ -102,8 +104,8 @@ public class BoardSecurityConfig {
                 .successHandler((request, response, authentication) -> {
                     var user = (Member)authentication.getPrincipal();
                     var session = request.getSession();
-                    session.setAttribute("username", user.getUsername());
-                    session.setAttribute("user", user);
+                    var sessionUser = new SessionUser(user);
+                    session.setAttribute("user", sessionUser);
                     response.sendRedirect(signInSuccessUrl);
                 })
             ;

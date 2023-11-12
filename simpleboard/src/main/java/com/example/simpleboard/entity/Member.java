@@ -84,6 +84,7 @@ public class Member implements UserDetails{
         }
     )
     @ToString.Exclude
+    @Builder.Default
     private final Set<Role> roles = new HashSet<>();
 
     @Transient

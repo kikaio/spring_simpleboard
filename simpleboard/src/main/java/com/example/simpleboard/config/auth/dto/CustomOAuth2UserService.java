@@ -56,6 +56,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         }
         else
         {
+            member = memberRepository.save(member);
             var basicUserRole = roleRepository.findByName(RoleEnums.ROLE_USER.name()).orElse(null);
             if(basicUserRole == null)
             {
@@ -66,8 +67,9 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 ;
                 basicUserRole = roleRepository.save(newRole);
             }
+            basicUserRole.getMembers().add(member);
             member.getRoles().add(basicUserRole);
-            member = memberRepository.save(member);
+            memberRepository.save(member);
         }
         return member;
     }

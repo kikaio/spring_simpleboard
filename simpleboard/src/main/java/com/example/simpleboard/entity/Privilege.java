@@ -36,11 +36,11 @@ public class Privilege {
     private String name = "";
 
     @ManyToMany(mappedBy = "privileges")
+    @Builder.Default
     private final Set<Role> roles = new HashSet<>();
 
     @Column(nullable = false)
     @ColumnDefault("''")
-    @Builder.Default
     private String descPrivilige = "";
 
     @Override

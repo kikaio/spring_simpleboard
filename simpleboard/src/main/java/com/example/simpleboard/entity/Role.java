@@ -23,6 +23,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -66,10 +67,12 @@ public class Role {
             )
         }
     )
-    private final Set<Privilege> privileges = new HashSet<Privilege>();
+    @Builder.Default
+    private Set<Privilege> privileges = new HashSet<Privilege>();
 
     @ManyToMany(mappedBy = "roles")
-    private final Set<Member> members = new HashSet<Member>();
+    @Builder.Default
+    private Set<Member> members = new HashSet<Member>();
 
     @Override
     public boolean equals(Object other)
