@@ -13,6 +13,7 @@ import lombok.Getter;
 @Builder
 public class OAuthAttribute {
     private Map<String, Object> attributes;
+    private String registrationId;
     private String nameAttributeKey;
     private String name;
     private String email;
@@ -38,7 +39,7 @@ public class OAuthAttribute {
     public Member toEntitywithoutRole()
     {
         var member =  Member.builder()
-            .email(email)
+            .email(this.email)
             .enabled(true)
             .expired(false)
             .locked(false)

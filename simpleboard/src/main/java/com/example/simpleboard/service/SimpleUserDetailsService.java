@@ -19,7 +19,9 @@ import org.springframework.stereotype.Service;
 
 import com.example.simpleboard.entity.Member;
 import com.example.simpleboard.entity.Role;
+import com.example.simpleboard.enums.RoleEnums;
 import com.example.simpleboard.repository.MemberRepository;
+import com.example.simpleboard.repository.RoleRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -29,6 +31,9 @@ public class SimpleUserDetailsService implements UserDetailsService
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -86,6 +91,11 @@ public class SimpleUserDetailsService implements UserDetailsService
         ;
 
         try {
+            var basicUserRole = roleRepository.findByName(RoleEnums.ROLE_USER.name()).orElse(null);
+            if(basicUserRole != null)
+            {
+                member.getRoles().add(basicUserRole);
+            }
             memberRepository.save(member);
             return true;
         } catch (Exception e) {
@@ -97,7 +107,7 @@ public class SimpleUserDetailsService implements UserDetailsService
     public boolean createMember(Member member)
     {
         try {
-            memberRepository.save(member);
+            this.createMember(member.getEmail(), member.getPassword());
             return true;
         } catch (Exception e) {
             return false;

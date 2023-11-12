@@ -9,9 +9,12 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import com.example.simpleboard.entity.Member;
+import com.example.simpleboard.entity.Privilege;
 import com.example.simpleboard.entity.Role;
+import com.example.simpleboard.enums.PrivilegeEnums;
 import com.example.simpleboard.enums.RoleEnums;
 import com.example.simpleboard.repository.MemberRepository;
+import com.example.simpleboard.repository.PrivilegeRepository;
 import com.example.simpleboard.repository.RoleRepository;
 
 import jakarta.servlet.http.HttpSession;
@@ -23,6 +26,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     private final MemberRepository memberRepository;
     private final HttpSession httpSession;
     private final RoleRepository roleRepository;
+    private final PrivilegeRepository privilegeRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException
@@ -58,17 +62,10 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         {
             member = memberRepository.save(member);
             var basicUserRole = roleRepository.findByName(RoleEnums.ROLE_USER.name()).orElse(null);
-            if(basicUserRole == null)
+            if(basicUserRole != null)
             {
-                var newRole = Role.builder()
-                    .name(RoleEnums.ROLE_USER.name())
-                    .descRole(RoleEnums.ROLE_USER.descRole)
-                    .build()
-                ;
-                basicUserRole = roleRepository.save(newRole);
+                member.getRoles().add(basicUserRole);
             }
-            basicUserRole.getMembers().add(member);
-            member.getRoles().add(basicUserRole);
             memberRepository.save(member);
         }
         return member;
