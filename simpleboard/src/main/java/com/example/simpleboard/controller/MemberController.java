@@ -43,7 +43,7 @@ public class MemberController
                 .password("1234")
                 .build()
             ;
-            simpleUserDetailsService.createMember(admin);
+            simpleUserDetailsService.createMember(admin.getEmail(), admin.getPassword());
         }
         testedMemberCnt += testMemberCnt;
         
@@ -100,7 +100,7 @@ public class MemberController
             //todo : error page로 보낼 것.
             return "";
         }
-        if(simpleUserDetailsService.createMember(entity) == false)
+        if(simpleUserDetailsService.createMember(entity.getEmail(), entity.getPassword()) == false)
         {
             //todo : error page로 보낼 것.
             return "";

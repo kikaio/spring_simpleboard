@@ -70,12 +70,11 @@ public class SimpleUserDetailsService implements UserDetailsService
     private Collection<SimpleGrantedAuthority> getRolesGrant(Member member)
     {
         var roleGrants = member.getRoles().stream()
-            .map(ele->new SimpleGrantedAuthority("ROLE_%s".formatted(ele.getName())))
+            .map(ele->new SimpleGrantedAuthority("%s".formatted(ele.getName())))
             .collect(Collectors.toSet())
         ;
         return roleGrants;
     }
-
 
     @Transactional
     public boolean createMember(String email, String  password)
@@ -97,17 +96,6 @@ public class SimpleUserDetailsService implements UserDetailsService
                 member.getRoles().add(basicUserRole);
             }
             memberRepository.save(member);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    @Transactional
-    public boolean createMember(Member member)
-    {
-        try {
-            this.createMember(member.getEmail(), member.getPassword());
             return true;
         } catch (Exception e) {
             return false;

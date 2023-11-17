@@ -30,11 +30,9 @@ public class SignController
     {
         String email = "admin@admin.com";
         String pw_plane = "1234";
-        var pwEncoder = new BCryptPasswordEncoder();
-        String pw_encoded = pwEncoder.encode(pw_plane);
-        var memberDto = new MemberDto(null, email, pw_encoded, true, false, false);
+        var memberDto = new MemberDto(null, email, pw_plane, true, false, false);
         var member = memberDto.toEntity();
-        simpleUserDetailsService.createMember(member);
+        simpleUserDetailsService.createMember(member.getEmail(), member.getPassword());
         return "redirect:/";
     }
     
@@ -71,9 +69,9 @@ public class SignController
             return "redirect:/sign/sign-up-failed";
         }
         log.info("sign up password : %s".formatted(memberDto.getPassword()));
-        var passwordEncoder = new BCryptPasswordEncoder();
-        memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword()));
-        log.info("sign up password : %s".formatted(memberDto.getPassword()));
+//        var passwordEncoder = new BCryptPasswordEncoder();
+//        memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword()));
+//        log.info("sign up password : %s".formatted(memberDto.getPassword()));
         var newMember = memberDto.toEntity();
         if(simpleUserDetailsService.validCheckCreateMember(newMember) == false)
         {
@@ -81,7 +79,7 @@ public class SignController
             return "redirect:/sign/sign-up-failed";
         }
         
-        if(simpleUserDetailsService.createMember(newMember) == false)
+        if(simpleUserDetailsService.createMember(newMember.getEmail(), newMember.getPassword()) == false)
         {
             reAttr.addFlashAttribute("errorMsg", "failed : member data save failed. please check again");
             return "redirect:/sign/sign-up-failed";
