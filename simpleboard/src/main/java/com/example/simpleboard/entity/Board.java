@@ -1,5 +1,7 @@
 package com.example.simpleboard.entity;
 
+import com.example.simpleboard.entity.utils.BaseUtcTimeEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,18 +9,18 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
 @Getter
+@SuperBuilder
 @ToString
-public class Board {
+public class Board extends BaseUtcTimeEntity{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
