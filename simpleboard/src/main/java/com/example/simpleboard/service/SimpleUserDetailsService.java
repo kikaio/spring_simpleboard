@@ -102,6 +102,36 @@ public class SimpleUserDetailsService implements UserDetailsService
         }
     }
 
+    @Transactional
+    public boolean createAdminMember(String email, String  password)
+    {
+        password = passwordEncoder.encode(password);
+        Member member = Member.builder()
+            .email(email)
+            .password(password)
+            .expired(false)
+            .locked(false)
+            .enabled(true)
+            .build()
+        ;
+
+        try {
+            var basicUserRole = roleRepository.findByName(RoleEnums.ROLE_USER.name()).orElse(null);
+            if(basicUserRole != null)
+            {
+                member.getRoles().add(basicUserRole);
+            }
+            var adminRole = roleRepository.findByName(RoleEnums.ROLE_ADMIN.name()).orElse(null);
+            if(adminRole != null)
+            {
+                member.getRoles().add(adminRole);
+            }
+            memberRepository.save(member);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
     public Page<Member> getMembers(Pageable pageable)
     {
         try {

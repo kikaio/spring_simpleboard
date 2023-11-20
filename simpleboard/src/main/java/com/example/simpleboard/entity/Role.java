@@ -7,6 +7,8 @@ import java.util.Set;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
+import com.example.simpleboard.entity.utils.BaseUtcTimeEntity;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,15 +25,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
+@SuperBuilder
 @DynamicInsert
-public class Role {
+public class Role extends BaseUtcTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -72,6 +75,7 @@ public class Role {
 
     @ManyToMany(mappedBy = "roles")
     @Builder.Default
+    @ToString.Exclude
     private Set<Member> members = new HashSet<Member>();
 
     @Override

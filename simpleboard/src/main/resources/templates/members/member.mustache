@@ -4,7 +4,7 @@
     {{>partials/head_partial}}
     <body class="d-flex flex-column min-vh-100">
         {{>partials/header_partial}}
-        <div id="content" class = "container-fluid">
+        <div class = "container-fluid">
             <p>유저 정보 page 입니다.</p>
         </div>
         <div id="content" class = "container-fluid">
@@ -37,6 +37,35 @@
                     </label>
                     <input class="form-check-input" type="checkbox" name="locked" id="flexCheckDefault" {{#locked}}checked{{/locked}} disabled>
                 </div>
+            </div>
+            <div class = "md-3">
+                <label class="form-label">roles</label> 
+                {{#roles}}
+                    <div class = "row align-items-start">
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="{{this.name}}" name="role_name_{{this.id}}" readonly>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="{{this.desc}}" name="role_desc_{{this.id}}" readonly>
+                        </div>
+                    </div>
+                    <br>
+                {{/roles}}
+            </div>
+            <br>
+            <div class = "md-3">
+                <label class="form-label">privileges</label> 
+                {{#privileges}}
+                    <div class = "row align-items-start">
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="{{this.name}}" name="priv_name_{{this.id}}" readonly>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="{{this.desc}}" name="priv_desc_{{this.id}}" readonly>
+                        </div>
+                    </div>
+                    <br>
+                {{/privileges}}
             </div>
             <button class="btn btn-info" type="button" onclick="location.href='/members/update?id={{id}}'">member upate</button>
             <button class="btn btn-secondary" type="button" onclick="location.href='/members'">go back to member list</button>

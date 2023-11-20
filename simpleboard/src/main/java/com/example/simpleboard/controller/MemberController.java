@@ -1,5 +1,8 @@
 package com.example.simpleboard.controller;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -13,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.simpleboard.dto.MemberDto;
+import com.example.simpleboard.dto.PrivilegeDto;
+import com.example.simpleboard.dto.RoleDto;
 import com.example.simpleboard.dto.SimplePageDto;
 import com.example.simpleboard.entity.Member;
+import com.example.simpleboard.service.RoleService;
 import com.example.simpleboard.service.SimpleUserDetailsService;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,12 +30,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class MemberController 
 {
     private final SimpleUserDetailsService simpleUserDetailsService;
+    private final RoleService roleService;
 
     private static final int cntPerPage = 10;
     private static int testedMemberCnt = 0;
-    public MemberController(SimpleUserDetailsService simpleUserDetailsService)
+    public MemberController(SimpleUserDetailsService simpleUserDetailsService, RoleService roleService)
     {
         this.simpleUserDetailsService = simpleUserDetailsService;
+        this.roleService = roleService;
     }
 
     @GetMapping("/test")
@@ -75,7 +83,22 @@ public class MemberController
             return "";
         }
         var memberDto = new MemberDto(member);
+        ArrayList<RoleDto> roleDtos = new ArrayList<>();
+        ArrayList<PrivilegeDto> privDtos = new ArrayList<>();
+        var roles = member.getRoles();
+        for(var role : roles)
+        {
+            roleDtos.add(new RoleDto(role));
+            var privileges = role.getPrivileges();
+            for(var priv : privileges)
+            {
+                privDtos.add(new PrivilegeDto(priv));
+            }
+        }
+
         model.addAttribute("member", memberDto);
+        model.addAttribute("roles", roleDtos);
+        model.addAttribute("privileges", privDtos);
         return "/members/member";
     }
 
@@ -158,4 +181,58 @@ public class MemberController
         return retView;
     }
 
+    @PostMapping("/{id}/roles/{roleId}")
+    public ModelAndView postRole(@PathVariable(name="id", required = true) long id, @PathVariable(name="roleId", required = true) long roleId)
+    {
+        var member = simpleUserDetailsService.getMember(id);
+        if(member == null)
+        {
+            // todo : error 처리
+            return new ModelAndView("");
+        }
+
+        var role = roleService.getRole(roleId);
+        if(role == null)
+        {
+            // todo : error 처리
+            return new ModelAndView("");
+        }
+        var roles = new HashSet<>(member.getRoles());
+        if(roles.contains(role))
+        {
+            //todo : duplicate error
+            return new ModelAndView("");
+        }
+        roles.add(role);
+        simpleUserDetailsService.updateOnlyRoles(member, roles);
+        var retView = new ModelAndView("redirect:/members/%d".formatted(id), HttpStatus.SEE_OTHER);
+        return retView;
+    }
+
+    @DeleteMapping("{id}/roles/{roleId}")
+    public ModelAndView deleteRole(@PathVariable(name="id", required = true)long id, @PathVariable(name="roleId", required = true)long roleId)
+    {
+        var member = simpleUserDetailsService.getMember(id);
+        if(member == null)
+        {
+            // todo : error 처리
+            return new ModelAndView("");
+        }
+
+        var role = roleService.getRole(roleId);
+        if(role == null)
+        {
+            // todo : error 처리
+            return new ModelAndView("");
+        }
+        var roles = new HashSet<>(member.getRoles());
+        if(roles.remove(role) == false)
+        {
+            //todo : duplicate error
+            return new ModelAndView("");
+        }
+        simpleUserDetailsService.updateOnlyRoles(member, roles);
+        var modelView = new ModelAndView("", HttpStatus.SEE_OTHER);
+        return modelView;
+    }
 }
